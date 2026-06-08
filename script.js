@@ -71,7 +71,10 @@ function updateCart() {
   const count = cart.reduce((s, c) => s + c.qty, 0);
 
   const countEl = document.getElementById('cartCount');
-  if (countEl) countEl.textContent = count;
+  if (countEl) {
+    countEl.textContent = count;
+    countEl.style.display = count > 0 ? 'flex' : 'none';
+  }
 
   const itemsLabel = document.getElementById('cartItemsLabel');
   if (itemsLabel) itemsLabel.textContent = `(${count} item${count !== 1 ? 's' : ''})`;
@@ -113,7 +116,10 @@ function changeQty(id, delta) {
   const item = cart.find(c => c.id === id);
   if (!item) return;
   item.qty += delta;
-  if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+  if (item.qty <= 0) {
+    cart = cart.filter(c => c.id !== id);
+    showToast(`"${item.name}" removed from bag`);
+  }
   updateCart();
 }
 
@@ -140,8 +146,16 @@ function showToast(msg) {
 
 // Countdown Timer
 function startCountdown() {
-  let end = new Date();
-  end.setHours(end.getHours() + 11, end.getMinutes() + 47, end.getSeconds() + 22);
+  let endStr = localStorage.getItem('luxe_sale_end');
+  let end;
+  if (endStr) {
+    end = new Date(endStr);
+  } else {
+    end = new Date();
+    end.setHours(end.getHours() + 11, end.getMinutes() + 47, end.getSeconds() + 22);
+    localStorage.setItem('luxe_sale_end', end.toISOString());
+  }
+
   setInterval(() => {
     const now = new Date();
     const diff = end - now;
@@ -164,5 +178,71 @@ function toggleWishlist(id) {
   showToast(`"${product.name}" saved to wishlist`);
 }
 
-renderProducts(products);
-startCountdown();
+document.addEventListener('DOMContentLoaded', () => {
+  renderProducts(products);
+  startCountdown();
+  updateCart();
+
+  const yearEl = document.getElementById('currentYear');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if (query) {
+          showToast(`Searching for "${query}"...`);
+          e.target.value = '';
+          toggleSearch();
+        }
+      }
+    });
+  }
+
+  const newsletterForm = document.getElementById('newsletterForm');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('newsletterEmail').value;
+      if (email) {
+        showToast('Subscribed successfully!');
+        e.target.reset();
+      }
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (link && link.getAttribute('href') === '#') {
+      e.preventDefault();
+      const aria = link.getAttribute('aria-label');
+      if (aria === 'Account' || aria === 'Wishlist' || link.textContent.trim() === 'Load More Products') {
+        showToast(`${aria || 'Feature'} coming soon`);
+      }
+    }
+  });
+
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      if (this.getAttribute('href') === '#') {
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const searchOverlay = document.getElementById('searchOverlay');
+      if (searchOverlay && searchOverlay.classList.contains('open')) {
+        toggleSearch();
+      }
+      const cartSidebar = document.getElementById('cartSidebar');
+      if (cartSidebar && cartSidebar.classList.contains('open')) {
+        toggleCart();
+      }
+    }
+  });
+});
