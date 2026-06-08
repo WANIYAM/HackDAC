@@ -14,7 +14,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Outfit', sans-serif; background: var(--cream); color: var(--dark); }
+body { font-family: 'Outfit', sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; }
 h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
 
 /* ANNOUNCEMENT BAR */
@@ -29,18 +29,14 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
 }
 .announcement-bar span { animation: fadeInOut 6s infinite; }
 
-/* ===== BUG #1: NAVBAR — toggler broken, links broken =====
-   - data-bs-toggle removed from toggler button so mobile menu won't open
-   - nav-link pointer-events set to none so clicks won't work
-   - z-index set to 0 so navbar goes behind content
-   ========================================================= */
+/* NAVBAR */
 .navbar {
   background: var(--white);
   border-bottom: 1px solid var(--border);
   padding: 0;
   position: sticky;
   top: 0;
-  z-index: 999; /* BUG: should be 999, navbar hidden behind sections */
+  z-index: 999;
 }
 .navbar-brand {
   font-family: 'Cormorant Garamond', serif;
@@ -59,7 +55,7 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   padding: 28px 16px !important;
   transition: color 0.3s;
   position: relative;
-  cursor: default;
+  cursor: pointer;
 }
 .nav-link::after {
   content: '';
@@ -488,7 +484,7 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
   font-size: 13px;
   text-decoration: none;
   transition: color 0.3s;
-  cursor: default;
+  cursor: pointer;
 }
 .footer-links a:hover { color: var(--white); }
 .footer-bottom {
@@ -631,27 +627,19 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
 
 @keyframes fadeInOut { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
-/* ===== BUG #2: RESPONSIVENESS BROKEN =====
-   - Mobile media query deliberately wrong:
-     viewport 768px rule removed / overrides broken
-   - Fixed position elements overflow on mobile
-   - Flex layout won't wrap properly
-   ========================================= */
+/* RESPONSIVE — MOBILE */
 @media (max-width: 768px) {
-  /* BUG: hero doesn't stack properly — min-height locks it */
   .hero { min-height: auto; padding: 60px 0; overflow: hidden; }
-  /* BUG: hero image NOT hidden on mobile — overlaps text */
   .hero-image-side { display: none; }
-  /* BUG: stats overflow off screen */
   .hero-stats { gap: 24px; flex-wrap: wrap; }
-  /* BUG: cart sidebar wider than viewport */
   .cart-sidebar { width: 100vw; }
-  /* BUG: divider still shows on mobile */
-  .divider-gold { display: block; }
-  /* BUG: navbar toggler icon color invisible */
+  .divider-gold { display: none; }
   .navbar-toggler { background: transparent !important; }
-  /* BUG: promo countdown overflows */
   .promo-countdown { gap: 16px; flex-wrap: wrap; overflow-x: visible; }
-  .countdown-num { font-size: 44px; }
-  /* BUG: product cards 100% width, 1 per row instead of 2 */
+  .countdown-num { font-size: 36px; }
+  .promo-card { padding: 40px 28px; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form input { border-right: 1px solid rgba(255,255,255,0.15); border-bottom: none; }
+  .newsletter-form button { width: 100%; }
+  .btn-outline-gold { margin-left: 0; margin-top: 12px; }
 }

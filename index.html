@@ -17,12 +17,10 @@
 </div>
 
 <!-- NAVBAR -->
-<!-- BUG: data-bs-toggle and data-bs-target attributes removed from toggler button -->
 <nav class="navbar navbar-expand-lg">
   <div class="container-xl">
     <a class="navbar-brand" href="#">Luxe</a>
-    <!-- BUG: toggler button missing data-bs-toggle="collapse" data-bs-target="#navMenu" -->
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
       <i class="bi bi-list" style="font-size:24px; color:var(--dark)"></i>
     </button>
     <div class="collapse navbar-collapse justify-content-center" id="navMenu">
@@ -36,10 +34,10 @@
       </ul>
     </div>
     <div class="nav-icons d-flex align-items-center">
-      <a href="#" onclick="toggleSearch()" title="Search"><i class="bi bi-search"></i></a>
-      <a href="#" title="Account"><i class="bi bi-person"></i></a>
-      <a href="#" title="Wishlist"><i class="bi bi-heart"></i></a>
-      <a href="#" onclick="toggleCart()" title="Cart" style="position:relative">
+      <a href="#" onclick="toggleSearch()" aria-label="Open search"><i class="bi bi-search"></i></a>
+      <a href="#" aria-label="Account"><i class="bi bi-person"></i></a>
+      <a href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+      <a href="#" onclick="toggleCart()" aria-label="Shopping cart" style="position:relative">
         <i class="bi bi-bag"></i>
         <span class="cart-badge" id="cartCount">0</span>
       </a>
@@ -48,10 +46,10 @@
 </nav>
 
 <!-- SEARCH OVERLAY -->
-<div class="search-overlay" id="searchOverlay">
-  <i class="bi bi-search" style="font-size:20px; color:var(--muted)"></i>
-  <input type="text" placeholder="Search for products, collections...">
-  <button class="search-close" onclick="toggleSearch()"><i class="bi bi-x"></i></button>
+<div class="search-overlay" id="searchOverlay" role="search">
+  <i class="bi bi-search" style="font-size:20px; color:var(--muted)" aria-hidden="true"></i>
+  <input type="text" placeholder="Search for products, collections..." aria-label="Search products">
+  <button class="search-close" onclick="toggleSearch()" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
 </div>
 
 <!-- HERO SECTION -->
@@ -352,7 +350,7 @@
     <h2 class="newsletter-title">Join the LUXE Circle</h2>
     <p class="newsletter-sub">Exclusive previews, early access, and style inspiration — delivered to your inbox.</p>
     <div class="newsletter-form mx-auto">
-      <input type="email" placeholder="Your email address">
+      <input type="email" placeholder="Your email address" aria-label="Email address for newsletter">
       <button>Subscribe</button>
     </div>
     <p style="color:rgba(255,255,255,0.25); font-size:12px; margin-top:16px; letter-spacing:1px">We respect your privacy. Unsubscribe anytime.</p>
