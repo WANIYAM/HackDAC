@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishlist — LUXE</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  <span>✦ Free Shipping on Orders Above Rs. 5,000 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; New Collection Arrived — Shop Now ✦</span>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-xl">
+    <a class="navbar-brand" href="index.html">Luxe</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list navbar-toggler-icon-custom"></i>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navMenu">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="collections.html">Collections</a></li>
+        <li class="nav-item"><a class="nav-link" href="women.html">Women</a></li>
+        <li class="nav-item"><a class="nav-link" href="men.html">Men</a></li>
+        <li class="nav-item"><a class="nav-link" href="accessories.html">Accessories</a></li>
+        <li class="nav-item"><a class="nav-link" href="sale.html">Sale</a></li>
+      </ul>
+    </div>
+    <div class="nav-icons d-flex align-items-center">
+      <a href="#" class="js-toggle-search" aria-label="Open search"><i class="bi bi-search"></i></a>
+      <a href="account.html" aria-label="Account"><i class="bi bi-person"></i></a>
+      <a href="wishlist.html" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+      <a href="#" class="cart-icon-wrap js-toggle-cart" aria-label="Shopping cart">
+        <i class="bi bi-bag"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <i class="bi bi-search search-icon" aria-hidden="true"></i>
+  <label for="searchInput" class="visually-hidden">Search products</label>
+  <input type="text" id="searchInput" placeholder="Search for products, collections..." aria-label="Search products">
+  <button class="search-close" id="searchClose" aria-label="Close search">×</button>
+</div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <div class="cart-header">
+    <h4 id="cartTitle">Your Bag</h4>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">×</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <!-- Cart items rendered here via JS -->
+  </div>
+  <div class="cart-footer">
+    <div class="d-flex justify-content-between mb-3">
+      <span class="fw-500">Subtotal</span>
+      <span class="fw-600" id="cartTotal">Rs. 0</span>
+    </div>
+    <p class="text-muted" style="font-size:12px; margin-bottom:16px;">Taxes and shipping calculated at checkout</p>
+    <button class="btn-checkout w-100">Proceed to Checkout</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast-msg" role="alert" aria-live="polite"></div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1200&q=80')"></div>
+  <div class="container-xl">
+    <div class="section-label">Your Favorites</div>
+    <h1 class="page-hero-title">Wishlist</h1>
+    <p class="page-hero-subtitle">Items you've saved for later.</p>
+  </div>
+</section>
+
+<!-- BREADCRUMB -->
+<div class="page-breadcrumb">
+  <div class="container-xl">
+    <a href="index.html">Home</a>
+    <span class="mx-2 text-muted">/</span>
+    <span>Wishlist</span>
+  </div>
+</div>
+
+<!-- WISHLIST SECTION -->
+<section class="py-5" style="min-height: 50vh;">
+  <div class="container-xl">
+    <div class="row g-4" id="wishlistGrid">
+      <!-- Wishlist items rendered here -->
+    </div>
+    <div id="emptyWishlistMsg" class="text-center py-5 d-none">
+      <i class="bi bi-heart" style="font-size: 3rem; color: var(--border); margin-bottom: 1rem; display: block;"></i>
+      <h3>Your wishlist is empty</h3>
+      <p class="text-muted mb-4">Save items you love by clicking the heart icon.</p>
+      <a href="collections.html" class="btn btn-outline-dark px-4 py-2" style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Explore Collections</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container-xl">
+    <div class="row g-4 g-lg-5">
+      <div class="col-md-6 col-lg-4">
+        <h3 class="footer-brand">Luxe</h3>
+        <p class="footer-desc">Curating elegance for the modern individual. Experience luxury that speaks through craftsmanship and timeless design.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="bi bi-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-2 offset-lg-1">
+        <h5 class="footer-title">Shop</h5>
+        <ul class="footer-links">
+          <li><a href="women.html">Women</a></li>
+          <li><a href="men.html">Men</a></li>
+          <li><a href="accessories.html">Accessories</a></li>
+          <li><a href="sale.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-6 col-lg-2">
+        <h5 class="footer-title">Help</h5>
+        <ul class="footer-links">
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h5 class="footer-title">Newsletter</h5>
+        <p class="footer-desc">Subscribe to receive updates, access to exclusive deals, and more.</p>
+        <form class="newsletter-form mt-3" id="newsletterFormFooter" action="#" method="POST">
+          <input type="email" placeholder="Enter your email" required aria-label="Email address">
+          <button type="submit" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 LUXE. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Render wishlist specific logic
+    if (typeof renderWishlist === 'function') {
+      renderWishlist();
+    }
+  });
+</script>
+</body>
+</html>

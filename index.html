@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -20,25 +20,25 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg">
   <div class="container-xl">
-    <a class="navbar-brand" href="#">Luxe</a>
+    <a class="navbar-brand" href="index.html">Luxe</a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <i class="bi bi-list" style="font-size:24px; color:var(--dark)"></i>
+      <i class="bi bi-list navbar-toggler-icon-custom"></i>
     </button>
     <div class="collapse navbar-collapse justify-content-center" id="navMenu">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Collections</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Women</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Men</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Accessories</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Sale</a></li>
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="collections.html">Collections</a></li>
+        <li class="nav-item"><a class="nav-link" href="women.html">Women</a></li>
+        <li class="nav-item"><a class="nav-link" href="men.html">Men</a></li>
+        <li class="nav-item"><a class="nav-link" href="accessories.html">Accessories</a></li>
+        <li class="nav-item"><a class="nav-link" href="sale.html">Sale</a></li>
       </ul>
     </div>
     <div class="nav-icons d-flex align-items-center">
-      <a href="#" onclick="toggleSearch()" aria-label="Open search"><i class="bi bi-search"></i></a>
-      <a href="#" aria-label="Account"><i class="bi bi-person"></i></a>
-      <a href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
-      <a href="#" onclick="toggleCart()" aria-label="Shopping cart" style="position:relative">
+      <a href="#" class="js-toggle-search" aria-label="Open search"><i class="bi bi-search"></i></a>
+      <a href="account.html" aria-label="Account"><i class="bi bi-person"></i></a>
+      <a href="wishlist.html" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+      <a href="#" class="cart-icon-wrap js-toggle-cart" aria-label="Shopping cart">
         <i class="bi bi-bag"></i>
         <span class="cart-badge" id="cartCount">0</span>
       </a>
@@ -47,10 +47,11 @@
 </nav>
 
 <!-- SEARCH OVERLAY -->
-<div class="search-overlay" id="searchOverlay" role="search">
-  <i class="bi bi-search" style="font-size:20px; color:var(--muted)" aria-hidden="true"></i>
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <i class="bi bi-search search-icon" aria-hidden="true"></i>
+  <label for="searchInput" class="visually-hidden">Search products</label>
   <input type="text" id="searchInput" placeholder="Search for products, collections..." aria-label="Search products">
-  <button class="search-close" onclick="toggleSearch()" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
+  <button class="search-close js-toggle-search" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
 </div>
 
 <!-- HERO SECTION -->
@@ -65,7 +66,7 @@
         <p class="hero-sub">Curated luxury fashion that transcends the ordinary. Every piece tells a story of craftsmanship, elegance, and timeless style.</p>
         <div class="d-flex gap-3 flex-wrap">
           <a href="#products" class="btn-gold">Shop Collection</a>
-          <a href="#" class="btn-outline-gold">Our Story</a>
+          <a href="about.html" class="btn-outline-gold">Our Story</a>
         </div>
         <div class="hero-stats">
           <div>
@@ -86,7 +87,7 @@
       </div>
       <div class="col-lg-6 hero-image-side ps-5">
         <div class="hero-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Fashion Model">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Fashion Model" loading="lazy">
           <div class="hero-img-tag">
             <div class="tag-label">Featured Look</div>
             <div class="tag-value">Summer Elegance</div>
@@ -147,7 +148,7 @@
     <div class="row g-3">
       <div class="col-lg-6">
         <div class="category-card">
-          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&q=80" alt="Women">
+          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&q=80" alt="Women" loading="lazy">
           <div class="category-overlay">
             <div><span>New Season</span><h3>Women's Edit</h3></div>
             <div class="category-arrow"><i class="bi bi-arrow-right"></i></div>
@@ -158,7 +159,7 @@
         <div class="row g-3 h-100">
           <div class="col-12">
             <div class="category-card">
-              <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=700&q=80" alt="Men" style="height:200px">
+              <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=700&q=80" alt="Men" class="category-card-img-sm" loading="lazy">
               <div class="category-overlay">
                 <div><span>Contemporary</span><h3>Men's Collection</h3></div>
                 <div class="category-arrow"><i class="bi bi-arrow-right"></i></div>
@@ -167,7 +168,7 @@
           </div>
           <div class="col-6">
             <div class="category-card">
-              <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80" alt="Bags" style="height:198px">
+              <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80" alt="Bags" class="category-card-img-xs" loading="lazy">
               <div class="category-overlay">
                 <span>Luxury</span><h3 class="category-sub-title">Bags</h3>
                 <div class="category-arrow"><i class="bi bi-arrow-right"></i></div>
@@ -176,7 +177,7 @@
           </div>
           <div class="col-6">
             <div class="category-card">
-              <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80" alt="Jewelry" style="height:198px">
+              <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80" alt="Jewelry" class="category-card-img-xs" loading="lazy">
               <div class="category-overlay">
                 <span>Fine</span><h3 class="category-sub-title">Jewelry</h3>
                 <div class="category-arrow"><i class="bi bi-arrow-right"></i></div>
@@ -199,14 +200,14 @@
       </div>
     </div>
     <div class="filter-tabs mb-4">
-      <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
-      <button class="filter-tab" onclick="filterProducts('women', this)">Women</button>
-      <button class="filter-tab" onclick="filterProducts('men', this)">Men</button>
-      <button class="filter-tab" onclick="filterProducts('accessories', this)">Accessories</button>
+      <button class="filter-tab active" >All</button>
+      <button class="filter-tab" >Women</button>
+      <button class="filter-tab" >Men</button>
+      <button class="filter-tab" >Accessories</button>
     </div>
     <div class="row g-4" id="productsGrid"></div>
     <div class="text-center mt-5">
-      <a href="#" class="btn-outline-gold" style="color:var(--dark); border-color:var(--dark);">Load More Products</a>
+      <button class="btn-load-more" >Load More Products</button>
     </div>
   </div>
 </section>
@@ -231,7 +232,7 @@
         </div>
       </div>
       <div class="col-lg-6">
-        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=700&q=80" alt="Sale" class="promo-img">
+        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=700&q=80" alt="Sale" class="promo-img" loading="lazy">
       </div>
     </div>
   </div>
@@ -252,7 +253,7 @@
     <div class="row g-4">
       <div class="col-lg-6">
         <div class="arrival-item">
-          <img src="https://images.unsplash.com/photo-1566479179817-634ff36f6875?w=200&q=80" alt="Silk Dress">
+          <img src="https://images.unsplash.com/photo-1566479179817-634ff36f6875?w=200&q=80" alt="Silk Dress" loading="lazy">
           <div>
             <div class="arrival-cat">Women</div>
             <div class="arrival-name">Silk Drape Midi Dress</div>
@@ -260,7 +261,7 @@
           <div class="arrival-price">Rs. 8,500</div>
         </div>
         <div class="arrival-item">
-          <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=200&q=80" alt="Linen Suit">
+          <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=200&q=80" alt="Linen Suit" loading="lazy">
           <div>
             <div class="arrival-cat">Men</div>
             <div class="arrival-name">Slim Fit Linen Suit</div>
@@ -268,7 +269,7 @@
           <div class="arrival-price">Rs. 18,500</div>
         </div>
         <div class="arrival-item">
-          <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=200&q=80" alt="Coat">
+          <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=200&q=80" alt="Coat" loading="lazy">
           <div>
             <div class="arrival-cat">Women</div>
             <div class="arrival-name">Cashmere Oversized Coat</div>
@@ -277,7 +278,7 @@
         </div>
       </div>
       <div class="col-lg-6">
-        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&q=80" alt="New Arrivals" style="width:100%; height:360px; object-fit:cover;">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&q=80" alt="New Arrivals" class="arrival-img-large" loading="lazy">
       </div>
     </div>
   </div>
@@ -298,7 +299,7 @@
           <div class="testimonial-author">
             <div class="author-avatar">SA</div>
             <div><div class="author-name">Sara Ahmed</div><div class="author-loc">Karachi, Pakistan</div></div>
-            <div class="ms-auto" style="color:var(--gold); font-size:14px">★★★★★</div>
+            <div class="ms-auto testimonial-stars">★★★★★</div>
           </div>
         </div>
       </div>
@@ -309,7 +310,7 @@
           <div class="testimonial-author">
             <div class="author-avatar">ZM</div>
             <div><div class="author-name">Zara Malik</div><div class="author-loc">Lahore, Pakistan</div></div>
-            <div class="ms-auto" style="color:var(--gold); font-size:14px">★★★★★</div>
+            <div class="ms-auto testimonial-stars">★★★★★</div>
           </div>
         </div>
       </div>
@@ -320,7 +321,7 @@
           <div class="testimonial-author">
             <div class="author-avatar">AK</div>
             <div><div class="author-name">Aisha Khan</div><div class="author-loc">Islamabad, Pakistan</div></div>
-            <div class="ms-auto" style="color:var(--gold); font-size:14px">★★★★★</div>
+            <div class="ms-auto testimonial-stars">★★★★★</div>
           </div>
         </div>
       </div>
@@ -329,17 +330,17 @@
 </section>
 
 <!-- BRANDS SECTION (new section added) -->
-<section style="padding: 60px 0; background: var(--white); border-top: 1px solid var(--border);">
+<section class="brands-section">
   <div class="container-xl">
     <div class="text-center mb-4">
       <div class="section-label">As Seen In</div>
     </div>
     <div class="d-flex justify-content-center align-items-center gap-5 flex-wrap">
-      <span style="font-family:'Cormorant Garamond',serif; font-size:22px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; font-weight:300;">Vogue</span>
-      <span style="font-family:'Cormorant Garamond',serif; font-size:22px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; font-weight:300;">Harper's</span>
-      <span style="font-family:'Cormorant Garamond',serif; font-size:22px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; font-weight:300;">Elle</span>
-      <span style="font-family:'Cormorant Garamond',serif; font-size:22px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; font-weight:300;">Bazaar</span>
-      <span style="font-family:'Cormorant Garamond',serif; font-size:22px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; font-weight:300;">GQ</span>
+      <span class="brand-logo-text">Vogue</span>
+      <span class="brand-logo-text">Harper's</span>
+      <span class="brand-logo-text">Elle</span>
+      <span class="brand-logo-text">Bazaar</span>
+      <span class="brand-logo-text">GQ</span>
     </div>
   </div>
 </section>
@@ -347,14 +348,16 @@
 <!-- NEWSLETTER -->
 <section class="newsletter-section">
   <div class="container-xl text-center">
-    <div class="section-label" style="color:var(--gold)">Stay In The Know</div>
+    <div class="section-label section-label-gold">Stay In The Know</div>
     <h2 class="newsletter-title">Join the LUXE Circle</h2>
     <p class="newsletter-sub">Exclusive previews, early access, and style inspiration — delivered to your inbox.</p>
-    <form class="newsletter-form mx-auto" id="newsletterForm">
+    <form class="newsletter-form mx-auto" id="newsletterForm" action="#" method="POST">
+      <label for="newsletterEmail" class="visually-hidden">Email address for newsletter</label>
       <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
       <button type="submit">Subscribe</button>
     </form>
-    <p style="color:rgba(255,255,255,0.25); font-size:12px; margin-top:16px; letter-spacing:1px">We respect your privacy. Unsubscribe anytime.</p>
+    <div id="newsletterMsg" class="newsletter-msg"></div>
+    <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
   </div>
 </section>
 
@@ -366,40 +369,37 @@
         <span class="footer-brand">Luxe</span>
         <p class="footer-tagline">Where style meets substance. Curating the finest fashion pieces for the discerning individual since 2017.</p>
         <div class="footer-social">
-          <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" class="social-btn"><i class="bi bi-pinterest"></i></a>
+          <a href="https://instagram.com/luxe" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+          <a href="https://facebook.com/luxe" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/luxe" class="social-btn" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+          <a href="https://pinterest.com/luxe" class="social-btn" aria-label="Pinterest"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
         </div>
       </div>
       <div class="col-6 col-lg-2">
         <div class="footer-heading">Shop</div>
         <ul class="footer-links">
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Women</a></li>
-          <li><a href="#">Men</a></li>
-          <li><a href="#">Accessories</a></li>
-          <li><a href="#">Sale</a></li>
+          <li><a href="collections.html">New Arrivals</a></li>
+          <li><a href="women.html">Women</a></li>
+          <li><a href="men.html">Men</a></li>
+          <li><a href="accessories.html">Accessories</a></li>
+          <li><a href="sale.html">Sale</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
         <div class="footer-heading">Help</div>
         <ul class="footer-links">
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Shipping Info</a></li>
-          <li><a href="#">Returns</a></li>
-          <li><a href="#">Size Guide</a></li>
-          <li><a href="#">Track Order</a></li>
+          <li><a href="contact.html">FAQ</a></li>
+          <li><a href="contact.html">Shipping Info</a></li>
+          <li><a href="contact.html">Returns</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
         <div class="footer-heading">Company</div>
         <ul class="footer-links">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Press</a></li>
-          <li><a href="#">Sustainability</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="about.html">Careers</a></li>
+          <li><a href="about.html">Sustainability</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
@@ -407,7 +407,7 @@
         <ul class="footer-links">
           <li><a href="mailto:hello@luxe.pk">hello@luxe.pk</a></li>
           <li><a href="tel:+923001234567">+92 300 1234567</a></li>
-          <li><a href="#" style="line-height:1.6">123 Fashion St,<br>Karachi, Pakistan</a></li>
+          <li><address class="footer-address">123 Fashion St,<br>Karachi, Pakistan</address></li>
         </ul>
       </div>
     </div>
@@ -425,27 +425,27 @@
 </footer>
 
 <!-- CART SIDEBAR -->
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-<div class="cart-sidebar" id="cartSidebar">
+<div class="cart-overlay js-toggle-cart" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true">
   <div class="cart-header">
-    <h4>Shopping Bag <span style="font-size:14px; color:var(--muted); font-family:'Outfit',sans-serif" id="cartItemsLabel">(0 items)</span></h4>
-    <button class="cart-close" onclick="toggleCart()"><i class="bi bi-x"></i></button>
+    <h4>Shopping Bag <span class="cart-items-label" id="cartItemsLabel">(0 items)</span></h4>
+    <button class="cart-close js-toggle-cart"><i class="bi bi-x"></i></button>
   </div>
   <div class="cart-body" id="cartBody">
     <div class="empty-cart" id="emptyCart">
       <i class="bi bi-bag"></i>
       <p>Your bag is empty.<br>Start shopping to add items.</p>
-      <button class="btn-gold mt-3" onclick="toggleCart()" style="cursor:pointer">Continue Shopping</button>
+      <button class="btn-gold mt-3 js-toggle-cart">Continue Shopping</button>
     </div>
     <div id="cartItems"></div>
   </div>
-  <div class="cart-footer" id="cartFooter" style="display:none">
+  <div class="cart-footer" id="cartFooter">
     <div class="cart-total">
       <span>Total</span>
       <strong id="cartTotal">Rs. 0</strong>
     </div>
     <button class="btn-checkout">Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i></button>
-    <button class="btn-continue" onclick="toggleCart()">Continue Shopping</button>
+    <button class="btn-continue js-toggle-cart">Continue Shopping</button>
   </div>
 </div>
 
@@ -453,6 +453,6 @@
 <div class="toast-msg" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
