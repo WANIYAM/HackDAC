@@ -40,7 +40,7 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   padding: 0;
   position: sticky;
   top: 0;
-  z-index: 0; /* BUG: should be 999, navbar hidden behind sections */
+  z-index: 999; /* BUG: should be 999, navbar hidden behind sections */
 }
 .navbar-brand {
   font-family: 'Cormorant Garamond', serif;
@@ -59,7 +59,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   padding: 28px 16px !important;
   transition: color 0.3s;
   position: relative;
-  pointer-events: none; /* BUG: nav links completely unclickable */
   cursor: default;
 }
 .nav-link::after {
@@ -158,7 +157,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   transition: all 0.3s;
   text-decoration: none;
   display: inline-block;
-  pointer-events: none; /* BUG: hero buttons not clickable */
   opacity: 0.9;
 }
 .btn-gold:hover { background: var(--gold-light); color: var(--dark); transform: translateY(-2px); }
@@ -176,7 +174,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   text-decoration: none;
   display: inline-block;
   margin-left: 16px;
-  pointer-events: none; /* BUG: outline button not clickable */
 }
 .btn-outline-gold:hover { background: var(--gold); color: var(--dark); }
 .hero-stats {
@@ -248,7 +245,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   border-bottom: 2px solid transparent;
   transition: all 0.3s;
   font-family: 'Outfit', sans-serif;
-  pointer-events: none; /* BUG: filter tabs not clickable */
 }
 .filter-tab.active, .filter-tab:hover { color: var(--dark); border-bottom-color: var(--gold); }
 .product-card {
@@ -284,7 +280,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
   transition: background 0.3s;
-  pointer-events: none; /* BUG: Add to Bag button broken */
 }
 .btn-add-cart:hover { background: var(--gold); }
 .btn-wishlist {
@@ -295,7 +290,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   font-size: 18px;
   color: var(--muted);
   transition: color 0.3s;
-  pointer-events: none; /* BUG: Wishlist button broken */
 }
 .btn-wishlist:hover { color: #e74c3c; }
 .product-badge {
@@ -457,7 +451,6 @@ h1,h2,h3,h4,h5 { font-family: 'Cormorant Garamond', serif; }
   font-family: 'Outfit', sans-serif;
   transition: background 0.3s;
   white-space: nowrap;
-  pointer-events: none; /* BUG: Subscribe button not working */
 }
 .newsletter-form button:hover { background: var(--gold-light); }
 
@@ -485,7 +478,6 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
   font-size: 16px;
   transition: all 0.3s;
   text-decoration: none;
-  pointer-events: none; /* BUG: footer social links broken */
 }
 .social-btn:hover { border-color: var(--gold); color: var(--gold); }
 .footer-heading { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; font-family: 'Outfit', sans-serif; }
@@ -496,7 +488,6 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
   font-size: 13px;
   text-decoration: none;
   transition: color 0.3s;
-  pointer-events: none; /* BUG: all footer links not clickable */
   cursor: default;
 }
 .footer-links a:hover { color: var(--white); }
@@ -515,7 +506,15 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
 .payment-icon { background: rgba(255,255,255,0.08); padding: 6px 10px; border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
 
 /* CART SIDEBAR */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1050; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1050;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
 .cart-overlay.open { opacity: 1; pointer-events: all; }
 .cart-sidebar {
   position: fixed;
@@ -640,20 +639,19 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
    ========================================= */
 @media (max-width: 768px) {
   /* BUG: hero doesn't stack properly — min-height locks it */
-  .hero { min-height: 92vh; padding: 0; overflow: visible; }
+  .hero { min-height: auto; padding: 60px 0; overflow: hidden; }
   /* BUG: hero image NOT hidden on mobile — overlaps text */
-  .hero-image-side { display: block; position: absolute; right: -60px; top: 0; width: 60%; opacity: 0.3; z-index: 1; }
+  .hero-image-side { display: none; }
   /* BUG: stats overflow off screen */
-  .hero-stats { gap: 48px; flex-wrap: nowrap; overflow: hidden; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
   /* BUG: cart sidebar wider than viewport */
-  .cart-sidebar { width: 140vw; }
+  .cart-sidebar { width: 100vw; }
   /* BUG: divider still shows on mobile */
   .divider-gold { display: block; }
   /* BUG: navbar toggler icon color invisible */
-  .navbar-toggler { background: var(--dark) !important; }
+  .navbar-toggler { background: transparent !important; }
   /* BUG: promo countdown overflows */
-  .promo-countdown { gap: 24px; flex-wrap: nowrap; overflow-x: scroll; }
+  .promo-countdown { gap: 16px; flex-wrap: wrap; overflow-x: visible; }
   .countdown-num { font-size: 44px; }
   /* BUG: product cards 100% width, 1 per row instead of 2 */
-  .col-6 { width: 100% !important; }
 }

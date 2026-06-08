@@ -16,12 +16,9 @@ const products = [
 
 let cart = [];
 
-// ===== BUG #3: renderProducts — broken ID selector =====
-// getElementById('productsGrid') should find the element but
-// we deliberately misspell the ID so it returns null and crashes
 function renderProducts(list) {
-  const grid = document.getElementById('productGrid'); // BUG: should be 'productsGrid'
-  if (!grid) return; // silently fails — no products shown
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
   grid.innerHTML = '';
   list.forEach(p => {
     const stars = '★'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
@@ -35,7 +32,7 @@ function renderProducts(list) {
             <img src="${p.img}" alt="${p.name}">
             <div class="product-actions">
               <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Bag</button>
-              <button class="btn-wishlist"><i class="bi bi-heart"></i></button>
+              <button class="btn-wishlist" onclick="toggleWishlist(${p.id})"><i class="bi bi-heart"></i></button>
             </div>
           </div>
           <div class="product-info">
@@ -49,17 +46,13 @@ function renderProducts(list) {
   });
 }
 
-// ===== BUG #4: filterProducts — filter logic inverted =====
-// Selecting "Women" shows Men + Accessories, etc.
 function filterProducts(cat, btn) {
   document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  // BUG: filter is inverted — shows everything EXCEPT the selected category
-  const filtered = cat === 'all' ? products : products.filter(p => p.category !== cat);
+  const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
   renderProducts(filtered);
 }
 
-// ===== BUG #5: addToCart — price stored as string causes wrong total =====
 function addToCart(id) {
   const product = products.find(p => p.id === id);
   if (!product) return;
@@ -67,20 +60,17 @@ function addToCart(id) {
   if (existing) {
     existing.qty++;
   } else {
-    // BUG: price converted to string — cart total will be NaN or concatenated
-    cart.push({ ...product, price: String(product.price), qty: 1 });
+    cart.push({ ...product, price: product.price, qty: 1 });
   }
   updateCart();
   showToast(`"${product.name}" added to bag`);
 }
 
-// ===== BUG #6: updateCart — cartCount ID is wrong =====
 function updateCart() {
   const total = cart.reduce((s, c) => s + Number(c.price) * c.qty, 0);
   const count = cart.reduce((s, c) => s + c.qty, 0);
 
-  // BUG: wrong element ID — badge never updates
-  const countEl = document.getElementById('cartBadge'); // should be 'cartCount'
+  const countEl = document.getElementById('cartCount');
   if (countEl) countEl.textContent = count;
 
   const itemsLabel = document.getElementById('cartItemsLabel');
@@ -127,18 +117,13 @@ function changeQty(id, delta) {
   updateCart();
 }
 
-// ===== BUG #7: toggleCart — wrong element ID =====
 function toggleCart() {
-  // BUG: 'cartOverlay' and 'cartSidebar' IDs are correct in HTML
-  // but toggling wrong class name breaks the open/close behaviour
-  document.getElementById('cartOverlay').classList.toggle('active'); // BUG: should be 'open'
-  document.getElementById('cartSidebar').classList.toggle('active'); // BUG: should be 'open'
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
 }
 
-// ===== BUG #8: toggleSearch — element ID mismatch =====
 function toggleSearch() {
-  // BUG: wrong ID
-  const el = document.getElementById('searchBar'); // should be 'searchOverlay'
+  const el = document.getElementById('searchOverlay');
   if (el) el.classList.toggle('open');
 }
 
@@ -168,6 +153,12 @@ function startCountdown() {
     if (cdM) cdM.textContent = String(m).padStart(2, '0');
     if (cdS) cdS.textContent = String(s).padStart(2, '0');
   }, 1000);
+}
+
+function toggleWishlist(id) {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+  showToast(`"${product.name}" saved to wishlist`);
 }
 
 renderProducts(products);
