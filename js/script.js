@@ -462,8 +462,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Generate order number for order confirmation page
   const orderNumberEl = document.getElementById('orderNumber');
   if (orderNumberEl) {
-    const randomNum = Math.floor(100000 + Math.random() * 900000);
-    orderNumberEl.textContent = '#LX-' + randomNum;
+    const orderNum = `#LX-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+    orderNumberEl.textContent = orderNum;
   }
 
   const searchInput = document.getElementById('searchInput');
@@ -645,12 +645,86 @@ document.addEventListener('DOMContentLoaded', () => {
   // Checkout Form Submission
   const checkoutForm = document.getElementById('checkoutForm');
   if (checkoutForm) {
+    // Payment Method Toggle
+    const creditCardRadio = document.getElementById('creditCard');
+    const codRadio = document.getElementById('cod');
+    const creditCardForm = document.getElementById('creditCardForm');
+
+    if (creditCardRadio && codRadio && creditCardForm) {
+      // Toggle credit card form visibility based on payment method
+      creditCardRadio.addEventListener('change', () => {
+        if (creditCardRadio.checked) {
+          creditCardForm.classList.remove('d-none');
+        }
+      });
+
+      codRadio.addEventListener('change', () => {
+        if (codRadio.checked) {
+          creditCardForm.classList.add('d-none');
+        }
+      });
+    }
+
+    // Credit Card Input Formatting
+    const cardNumberInput = document.getElementById('cardNumber');
+    const expiryDateInput = document.getElementById('expiryDate');
+    const cvvInput = document.getElementById('cvv');
+
+    // Format card number with spaces (XXXX XXXX XXXX XXXX)
+    if (cardNumberInput) {
+      cardNumberInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\s/g, ''); // Remove existing spaces
+        let formattedValue = '';
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+          }
+          formattedValue += value[i];
+        }
+        e.target.value = formattedValue;
+      });
+    }
+
+    // Format expiry date (MM / YY)
+    if (expiryDateInput) {
+      expiryDateInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\s/g, '').replace(/\//g, ''); // Remove spaces and slashes
+        if (value.length >= 2) {
+          value = value.slice(0, 2) + ' / ' + value.slice(2, 4);
+        }
+        e.target.value = value;
+      });
+    }
+
+    // CVV - only allow numeric input
+    if (cvvInput) {
+      cvvInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+      });
+    }
+
+    // Form Submission with Validation
     checkoutForm.addEventListener('submit', (e) => {
       e.preventDefault();
       if (cart.length === 0) {
         showToast('Your cart is empty.');
         return;
       }
+
+      // Validate credit card fields if credit card is selected
+      if (creditCardRadio && creditCardRadio.checked) {
+        const cardholderName = document.getElementById('cardholderName');
+        const cardNumber = document.getElementById('cardNumber');
+        const expiryDate = document.getElementById('expiryDate');
+        const cvv = document.getElementById('cvv');
+
+        if (!cardholderName.value.trim() || !cardNumber.value.trim() ||
+            !expiryDate.value.trim() || !cvv.value.trim()) {
+          showToast('Please complete your card details.');
+          return;
+        }
+      }
+
       showToast('Order placed successfully! Thank you for shopping with LUXE.');
       cart = [];
       currentDiscount = 0;
@@ -659,6 +733,31 @@ document.addEventListener('DOMContentLoaded', () => {
       checkoutForm.reset();
       setTimeout(() => {
         window.location.href = 'order-confirmation.html';
+      }, 2000);
+    });
+  }
+
+  // Forgot Password Form Submission
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  if (forgotPasswordForm) {
+    forgotPasswordForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value.trim();
+
+      // Email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email || !emailRegex.test(email)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+
+      showToast('Password reset link sent! Please check your inbox.');
+      forgotPasswordForm.reset();
+      setTimeout(() => {
+        window.location.href = 'account.html';
       }, 2000);
     });
   }

@@ -14,8 +14,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="LUXE">
 <meta property="og:url" content="product.html">
-<meta property="og:title" content="">
-<meta property="og:description" content="LUXE — Product Details">
+<meta property="og:title" content="Shop Premium Fashion — LUXE">
+<meta property="og:description" content="Discover premium fashion pieces at LUXE. Shop our curated collection of luxury clothing and accessories.">
 <meta property="og:image" content="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80">
 </head>
 <body>
@@ -171,10 +171,10 @@
         <span class="footer-brand">Luxe</span>
         <p class="footer-tagline">Where style meets substance. Curating the finest fashion pieces for the discerning individual since 2017.</p>
         <div class="footer-social">
-          <a href="https://instagram.com/luxe" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-          <a href="https://facebook.com/luxe" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
-          <a href="https://twitter.com/luxe" class="social-btn" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
-          <a href="https://pinterest.com/luxe" class="social-btn" aria-label="Pinterest"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram" onclick="showToast('Follow us soon — social pages coming shortly!'); return false;"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+          <a href="#" class="social-btn" aria-label="Facebook" onclick="showToast('Follow us soon — social pages coming shortly!'); return false;"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+          <a href="#" class="social-btn" aria-label="Twitter" onclick="showToast('Follow us soon — social pages coming shortly!'); return false;"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+          <a href="#" class="social-btn" aria-label="Pinterest" onclick="showToast('Follow us soon — social pages coming shortly!'); return false;"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
         </div>
       </div>
       <div class="col-6 col-lg-2">
@@ -191,7 +191,7 @@
         <div class="footer-heading">Help</div>
         <ul class="footer-links">
           <li><a href="faq.html">FAQ</a></li>
-          <li><a href="shipping-returns.html">Shipping Info</a></li>
+          <li><a href="shipping-info.html">Shipping Info</a></li>
           <li><a href="shipping-returns.html">Returns</a></li>
         </ul>
       </div>
@@ -202,6 +202,8 @@
           <li><a href="careers.html">Careers</a></li>
           <li><a href="sustainability.html">Sustainability</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-of-service.html">Terms of Service</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
@@ -263,7 +265,13 @@
     const urlParams = new URLSearchParams(window.location.search);
     const productId = parseInt(urlParams.get('id'));
 
-    if (!productId || !products) {
+    // Check if products array is available
+    if (typeof products === 'undefined' || !Array.isArray(products)) {
+      window.location.href = 'collections.html';
+      return;
+    }
+
+    if (!productId) {
       window.location.href = 'collections.html';
       return;
     }
@@ -297,9 +305,16 @@
     document.getElementById('pageTitle').textContent = `${product.name} — LUXE`;
     document.getElementById('productImage').src = product.img;
     document.getElementById('productImage').alt = product.name;
-    document.getElementById('productCategory').textContent = product.category;
+    document.getElementById('productCategory').textContent = product.cat;
     document.getElementById('productName').textContent = product.name;
     document.getElementById('productDescription').textContent = description;
+
+    // Update meta description dynamically
+    document.querySelector('meta[name="description"]').setAttribute('content', 'Shop ' + product.name + ' at LUXE. ' + 'Premium quality ' + product.cat.toLowerCase() + ' fashion. Free shipping on orders over Rs. 5,000.');
+
+    // Update Open Graph meta tags dynamically
+    document.querySelector('meta[property="og:title"]').setAttribute('content', `${product.name} — LUXE`);
+    document.querySelector('meta[property="og:description"]').setAttribute('content', `${product.name} from LUXE. ${description.substring(0, 120)}...`);
 
     // Breadcrumb
     const categoryMap = {
@@ -308,7 +323,7 @@
       'accessories': 'accessories.html'
     };
     const categoryLink = document.getElementById('breadcrumbCategory');
-    categoryLink.textContent = product.category;
+    categoryLink.textContent = product.cat;
     categoryLink.href = categoryMap[product.category] || 'collections.html';
     document.getElementById('breadcrumbProduct').textContent = product.name;
 

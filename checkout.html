@@ -88,6 +88,36 @@
               <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cod">
               <label class="form-check-label" for="cod">Cash on Delivery</label>
             </div>
+
+            <!-- Credit Card Form -->
+            <div id="creditCardForm" class="mt-4">
+              <div class="mb-3">
+                <label for="cardholderName" class="form-label">Cardholder Name *</label>
+                <input type="text" class="form-control" id="cardholderName" placeholder="Name on card">
+              </div>
+              <div class="mb-3">
+                <label for="cardNumber" class="form-label">Card Number *</label>
+                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="expiryDate" class="form-label">Expiry Date *</label>
+                  <input type="text" class="form-control" id="expiryDate" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="col-md-6">
+                  <label for="cvv" class="form-label">CVV *</label>
+                  <input type="password" class="form-control" id="cvv" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <span class="payment-icon">VISA</span>
+                <span class="payment-icon">MC</span>
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-lock-fill" style="color: var(--gold); font-size: 14px;"></i>
+                  <span style="font-size: 12px; color: var(--muted);">Secure 256-bit SSL encryption</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-dark w-100 py-3 mb-4" style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Place Order</button>
