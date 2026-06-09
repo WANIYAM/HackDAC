@@ -8,7 +8,7 @@ const pages = [
   { name: 'sale', title: 'Sale', desc: 'Exclusive pieces at exceptional prices. Limited time only.' }
 ];
 
-const html = fs.readFileSync('../index.html', 'utf8');
+const html = fs.readFileSync('index.html', 'utf8');
 
 pages.forEach(page => {
   let content = html;
@@ -49,8 +49,8 @@ pages.forEach(page => {
   content = content.replace('<div class="section-label">Curated For You</div>', `<div class="section-label">${page.title} Category</div>`);
   content = content.replace('<h2 class="section-title">Featured Products</h2>', `<h2 class="section-title">${page.title}</h2>`);
 
-  // We write it to the parent directory because this script is in /tools
-  fs.writeFileSync(`../${page.name}.html`, content);
+  // We write to the current directory assuming the script is run from the project root
+  fs.writeFileSync(`${page.name}.html`, content);
 });
 
 console.log('Category pages generated successfully.');

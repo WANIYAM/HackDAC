@@ -12,6 +12,22 @@ const products = [
   { id:6, name:"Oxford Shirt — Classic", cat:"Men", price:4200, oldPrice:null, badge:null, rating:4, reviews:29, img:"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80", category:"men" },
   { id:7, name:"Gold Chain Bracelet", cat:"Accessories", price:3500, oldPrice:5000, badge:"sale", rating:5, reviews:42, img:"https://images.unsplash.com/photo-1573408301185-9519f94816b5?w=400&q=80", category:"accessories" },
   { id:8, name:"Cashmere Oversized Coat", cat:"Women", price:24000, oldPrice:null, badge:"new", rating:5, reviews:8, img:"https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=400&q=80", category:"women" },
+  { id:9, name:"Velvet Evening Gown", cat:"Women", price:28000, oldPrice:null, badge:"new", rating:5, reviews:12, img:"https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80", category:"women" },
+  { id:10, name:"Pleated Maxi Skirt", cat:"Women", price:7500, oldPrice:10000, badge:"sale", rating:4, reviews:21, img:"https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=400&q=80", category:"women" },
+  { id:11, name:"Embroidered Tunic Top", cat:"Women", price:5500, oldPrice:null, badge:null, rating:4, reviews:19, img:"https://images.unsplash.com/photo-1564257577054-2dddb6d4e95c?w=400&q=80", category:"women" },
+  { id:12, name:"Satin Slip Dress", cat:"Women", price:9800, oldPrice:null, badge:null, rating:5, reviews:16, img:"https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&q=80", category:"women" },
+  { id:13, name:"Wool Overcoat", cat:"Men", price:22000, oldPrice:null, badge:"new", rating:5, reviews:14, img:"https://images.unsplash.com/photo-1578766209430-01099a1ba5b4?w=400&q=80", category:"men" },
+  { id:14, name:"Chinos — Slim Fit", cat:"Men", price:6500, oldPrice:8500, badge:"sale", rating:4, reviews:27, img:"https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&q=80", category:"men" },
+  { id:15, name:"Denim Jacket", cat:"Men", price:8900, oldPrice:null, badge:null, rating:4, reviews:33, img:"https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=400&q=80", category:"men" },
+  { id:16, name:"Knit Sweater", cat:"Men", price:7200, oldPrice:null, badge:null, rating:5, reviews:18, img:"https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&q=80", category:"men" },
+  { id:17, name:"Formal Dress Shoes", cat:"Men", price:12500, oldPrice:null, badge:null, rating:5, reviews:22, img:"https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&q=80", category:"men" },
+  { id:18, name:"Polo Shirt — Navy", cat:"Men", price:4500, oldPrice:null, badge:null, rating:4, reviews:25, img:"https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&q=80", category:"men" },
+  { id:19, name:"Silk Scarf", cat:"Accessories", price:3800, oldPrice:null, badge:"new", rating:5, reviews:28, img:"https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&q=80", category:"accessories" },
+  { id:20, name:"Leather Belt", cat:"Accessories", price:4200, oldPrice:6000, badge:"sale", rating:4, reviews:35, img:"https://images.unsplash.com/photo-1624222247344-550fb60583bb?w=400&q=80", category:"accessories" },
+  { id:21, name:"Designer Sunglasses", cat:"Accessories", price:8500, oldPrice:null, badge:null, rating:5, reviews:17, img:"https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80", category:"accessories" },
+  { id:22, name:"Pearl Necklace", cat:"Accessories", price:12000, oldPrice:null, badge:null, rating:5, reviews:13, img:"https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80", category:"accessories" },
+  { id:23, name:"Crossbody Bag", cat:"Accessories", price:6800, oldPrice:null, badge:null, rating:4, reviews:29, img:"https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&q=80", category:"accessories" },
+  { id:24, name:"Ankle Boots", cat:"Accessories", price:14500, oldPrice:null, badge:"new", rating:5, reviews:11, img:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80", category:"accessories" },
 ];
 
 let cart = JSON.parse(localStorage.getItem('luxe_cart') || '[]');
@@ -36,17 +52,54 @@ function renderProducts(list) {
     grid.innerHTML += `
       <div class="col-6 col-lg-3 product-data" data-cat="${p.category}">
         <div class="product-card">
-          <div class="product-img-wrap">
-            ${badgeHtml}
-            <img src="${p.img}" alt="${p.name}" loading="lazy">
-            <div class="product-actions">
-              <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
-              <button class="btn-wishlist js-wishlist" data-id="${p.id}"><i class="bi bi-heart"></i></button>
+          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <div class="product-img-wrap">
+              ${badgeHtml}
+              <img src="${p.img}" alt="${p.name}" loading="lazy">
             </div>
+          </a>
+          <div class="product-actions">
+            <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
+            <button class="btn-wishlist js-wishlist" data-id="${p.id}"><i class="bi bi-heart"></i></button>
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <h5>${p.name}</h5>
+            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+              <h5>${p.name}</h5>
+            </a>
+            <div class="product-price">${oldPriceHtml}Rs. ${p.price.toLocaleString()}</div>
+            <div class="product-rating"><span class="stars">${stars}</span><span>(${p.reviews})</span></div>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+function appendProducts(list) {
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+  list.forEach(p => {
+    const stars = '★'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
+    const badgeHtml = p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge}</div>` : '';
+    const oldPriceHtml = p.oldPrice ? `<span class="old-price">Rs. ${p.oldPrice.toLocaleString()}</span>` : '';
+    grid.innerHTML += `
+      <div class="col-6 col-lg-3 product-data" data-cat="${p.category}">
+        <div class="product-card">
+          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <div class="product-img-wrap">
+              ${badgeHtml}
+              <img src="${p.img}" alt="${p.name}" loading="lazy">
+            </div>
+          </a>
+          <div class="product-actions">
+            <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
+            <button class="btn-wishlist js-wishlist" data-id="${p.id}"><i class="bi bi-heart"></i></button>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">${p.cat}</div>
+            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+              <h5>${p.name}</h5>
+            </a>
             <div class="product-price">${oldPriceHtml}Rs. ${p.price.toLocaleString()}</div>
             <div class="product-rating"><span class="stars">${stars}</span><span>(${p.reviews})</span></div>
           </div>
@@ -57,6 +110,8 @@ function renderProducts(list) {
 
 let currentCategoryFilter = 'all';
 let currentSortOrder = 'featured';
+let currentDisplayCount = 8;
+let currentFilteredProducts = [];
 
 function filterProducts(cat, btn) {
   if (btn) {
@@ -64,11 +119,12 @@ function filterProducts(cat, btn) {
     btn.classList.add('active');
   }
   currentCategoryFilter = cat;
+  currentDisplayCount = 8; // Reset to 8 when filtering changes
   applyFiltersAndSort();
 }
 
 function applyFiltersAndSort() {
-  let filtered = currentCategoryFilter === 'all' ? [...products] : 
+  let filtered = currentCategoryFilter === 'all' ? [...products] :
                  currentCategoryFilter === 'sale' ? products.filter(p => p.badge === 'sale') :
                  products.filter(p => p.category === currentCategoryFilter);
 
@@ -81,7 +137,65 @@ function applyFiltersAndSort() {
   } else {
     filtered.sort((a, b) => a.id - b.id); // Featured/Default
   }
-  renderProducts(filtered);
+
+  currentFilteredProducts = filtered;
+  renderProductsWithPagination();
+}
+
+function renderProductsWithPagination() {
+  const productsToShow = currentFilteredProducts.slice(0, currentDisplayCount);
+  renderProducts(productsToShow);
+
+  // Update Load More button and completion message visibility
+  const loadMoreBtn = document.querySelector('.btn-load-more');
+  let completionMsg = document.getElementById('paginationComplete');
+
+  if (loadMoreBtn) {
+    const loadMoreParent = loadMoreBtn.parentElement;
+
+    // Create completion message if it doesn't exist
+    if (!completionMsg && loadMoreParent) {
+      completionMsg = document.createElement('p');
+      completionMsg.id = 'paginationComplete';
+      completionMsg.style.cssText = 'color: var(--muted); font-size: 14px; text-align: center; margin-top: 16px; display: none;';
+      completionMsg.textContent = "You've seen all products";
+      loadMoreParent.appendChild(completionMsg);
+    }
+
+    if (currentDisplayCount >= currentFilteredProducts.length) {
+      loadMoreBtn.style.display = 'none';
+      if (completionMsg && currentFilteredProducts.length > 8) {
+        completionMsg.style.display = 'block';
+      }
+    } else {
+      loadMoreBtn.style.display = 'inline-block';
+      if (completionMsg) {
+        completionMsg.style.display = 'none';
+      }
+    }
+  }
+}
+
+function loadMoreProducts() {
+  const previousCount = currentDisplayCount;
+  currentDisplayCount += 8;
+
+  // Get only the new products to append
+  const newProducts = currentFilteredProducts.slice(previousCount, currentDisplayCount);
+  appendProducts(newProducts);
+
+  // Update button and message visibility
+  const loadMoreBtn = document.querySelector('.btn-load-more');
+  const completionMsg = document.getElementById('paginationComplete');
+
+  if (loadMoreBtn) {
+    if (currentDisplayCount >= currentFilteredProducts.length) {
+      loadMoreBtn.style.display = 'none';
+      if (completionMsg && currentFilteredProducts.length > 8) {
+        completionMsg.style.display = 'block';
+      }
+    }
+  }
 }
 
 function addToCart(id) {
@@ -242,16 +356,20 @@ function renderWishlist() {
     grid.innerHTML += `
       <div class="col-6 col-lg-3">
         <div class="product-card">
-          <div class="product-img-wrap">
-            <img src="${p.img}" alt="${p.name}" loading="lazy">
-            <div class="product-actions">
-              <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
-              <button class="btn-wishlist js-wishlist" data-id="${p.id}" style="color: var(--danger);"><i class="bi bi-heart-fill"></i></button>
+          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <div class="product-img-wrap">
+              <img src="${p.img}" alt="${p.name}" loading="lazy">
             </div>
+          </a>
+          <div class="product-actions">
+            <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
+            <button class="btn-wishlist js-wishlist" data-id="${p.id}" style="color: var(--danger);"><i class="bi bi-heart-fill"></i></button>
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <h5>${p.name}</h5>
+            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+              <h5>${p.name}</h5>
+            </a>
             <div class="product-price">Rs. ${p.price.toLocaleString()}</div>
             <div class="product-rating"><span class="stars">${stars}</span><span>(${p.reviews || 0})</span></div>
           </div>
@@ -334,9 +452,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (query.length < 3) {
           showToast('Please enter at least 3 characters to search.');
         } else {
-          showToast(`Searching for "${query}"...`);
-          e.target.value = '';
-          toggleSearch();
+          // Filter products based on search query
+          const results = products.filter(p =>
+            p.name.toLowerCase().includes(query.toLowerCase()) ||
+            p.cat.toLowerCase().includes(query.toLowerCase())
+          );
+
+          // Store query and results in sessionStorage
+          sessionStorage.setItem('luxe_search_query', query);
+          sessionStorage.setItem('luxe_search_results', JSON.stringify(results));
+
+          // Redirect to search page
+          window.location.href = 'search.html';
         }
       }
     });
@@ -401,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Handle Load More
     if (e.target.closest('.btn-load-more')) {
-      showToast('More products coming soon!');
+      loadMoreProducts();
     }
     // Handle Toggle Search
     if (e.target.closest('.js-toggle-search')) {
@@ -428,6 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sortSelect) {
     sortSelect.addEventListener('change', (e) => {
       currentSortOrder = e.target.value;
+      currentDisplayCount = 8; // Reset to 8 when sorting changes
       applyFiltersAndSort();
     });
   }
@@ -437,11 +565,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const message = document.getElementById('message').value.trim();
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const subject = document.getElementById('contactSubject').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
 
-      if (!name || !email || !message) {
+      if (!name || !email || !subject || !message) {
         showToast('Please fill in all required fields.');
         return;
       }
@@ -467,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
       updateCart();
       checkoutForm.reset();
       setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = 'order-confirmation.html';
       }, 2000);
     });
   }
@@ -476,10 +605,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.querySelectorAll('.nav-link');
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
   navLinks.forEach(link => {
-    link.classList.remove('active');
     const href = link.getAttribute('href');
     if (href === currentPage) {
       link.classList.add('active');
+    } else if (link.classList.contains('active') && href !== currentPage) {
+      link.classList.remove('active');
     }
   });
 

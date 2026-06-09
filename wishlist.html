@@ -50,26 +50,31 @@
   <i class="bi bi-search search-icon" aria-hidden="true"></i>
   <label for="searchInput" class="visually-hidden">Search products</label>
   <input type="text" id="searchInput" placeholder="Search for products, collections..." aria-label="Search products">
-  <button class="search-close" id="searchClose" aria-label="Close search">×</button>
+  <button class="search-close js-toggle-search" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
 </div>
 
-<!-- CART OVERLAY -->
-<div class="cart-overlay" id="cartOverlay"></div>
-<div class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+<!-- CART SIDEBAR -->
+<div class="cart-overlay js-toggle-cart" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true">
   <div class="cart-header">
-    <h4 id="cartTitle">Your Bag</h4>
-    <button class="cart-close" id="cartClose" aria-label="Close cart">×</button>
+    <h4>Shopping Bag <span class="cart-items-label" id="cartItemsLabel">(0 items)</span></h4>
+    <button class="cart-close js-toggle-cart"><i class="bi bi-x"></i></button>
   </div>
   <div class="cart-body" id="cartBody">
-    <!-- Cart items rendered here via JS -->
-  </div>
-  <div class="cart-footer">
-    <div class="d-flex justify-content-between mb-3">
-      <span class="fw-500">Subtotal</span>
-      <span class="fw-600" id="cartTotal">Rs. 0</span>
+    <div class="empty-cart" id="emptyCart">
+      <i class="bi bi-bag"></i>
+      <p>Your bag is empty.<br>Start shopping to add items.</p>
+      <button class="btn-gold mt-3 js-toggle-cart">Continue Shopping</button>
     </div>
-    <p class="text-muted" style="font-size:12px; margin-bottom:16px;">Taxes and shipping calculated at checkout</p>
-    <button class="btn-checkout w-100">Proceed to Checkout</button>
+    <div id="cartItems"></div>
+  </div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">Rs. 0</strong>
+    </div>
+    <button class="btn-checkout">Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i></button>
+    <button class="btn-continue js-toggle-cart">Continue Shopping</button>
   </div>
 </div>
 
@@ -111,51 +116,63 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="footer">
+<footer>
   <div class="container-xl">
-    <div class="row g-4 g-lg-5">
-      <div class="col-md-6 col-lg-4">
-        <h3 class="footer-brand">Luxe</h3>
-        <p class="footer-desc">Curating elegance for the modern individual. Experience luxury that speaks through craftsmanship and timeless design.</p>
-        <div class="social-links">
-          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" aria-label="Pinterest"><i class="bi bi-pinterest"></i></a>
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <span class="footer-brand">Luxe</span>
+        <p class="footer-tagline">Where style meets substance. Curating the finest fashion pieces for the discerning individual since 2017.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/luxe" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+          <a href="https://facebook.com/luxe" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/luxe" class="social-btn" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+          <a href="https://pinterest.com/luxe" class="social-btn" aria-label="Pinterest"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
         </div>
       </div>
-      <div class="col-sm-6 col-lg-2 offset-lg-1">
-        <h5 class="footer-title">Shop</h5>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Shop</div>
         <ul class="footer-links">
+          <li><a href="collections.html">New Arrivals</a></li>
           <li><a href="women.html">Women</a></li>
           <li><a href="men.html">Men</a></li>
           <li><a href="accessories.html">Accessories</a></li>
           <li><a href="sale.html">Sale</a></li>
         </ul>
       </div>
-      <div class="col-sm-6 col-lg-2">
-        <h5 class="footer-title">Help</h5>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Help</div>
         <ul class="footer-links">
-          <li><a href="contact.html">Contact Us</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="#">Shipping & Returns</a></li>
-          <li><a href="#">FAQ</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="shipping-returns.html">Shipping Info</a></li>
+          <li><a href="shipping-returns.html">Returns</a></li>
         </ul>
       </div>
-      <div class="col-lg-3">
-        <h5 class="footer-title">Newsletter</h5>
-        <p class="footer-desc">Subscribe to receive updates, access to exclusive deals, and more.</p>
-        <form class="newsletter-form mt-3" id="newsletterFormFooter" action="#" method="POST">
-          <input type="email" placeholder="Enter your email" required aria-label="Email address">
-          <button type="submit" aria-label="Subscribe"><i class="bi bi-arrow-right"></i></button>
-        </form>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="sustainability.html">Sustainability</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@luxe.pk">hello@luxe.pk</a></li>
+          <li><a href="tel:+923001234567">+92 300 1234567</a></li>
+          <li><address class="footer-address">123 Fashion St,<br>Karachi, Pakistan</address></li>
+        </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2026 LUXE. All rights reserved.</p>
-      <div class="footer-bottom-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+      <p>&copy; 2017&ndash;<span id="currentYear"></span> LUXE. All rights reserved.</p>
+      <div class="payment-icons">
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MC</span>
+        <span class="payment-icon">JazzCash</span>
+        <span class="payment-icon">EasyPaisa</span>
+        <span class="payment-icon">COD</span>
       </div>
     </div>
   </div>

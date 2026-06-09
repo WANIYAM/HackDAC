@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LUXE — Product Details">
+<title id="pageTitle">Product — LUXE</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  <span>✦ Free Shipping on Orders Above Rs. 5,000 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; New Collection Arrived — Shop Now ✦</span>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-xl">
+    <a class="navbar-brand" href="index.html">Luxe</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list navbar-toggler-icon-custom"></i>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navMenu">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="collections.html">Collections</a></li>
+        <li class="nav-item"><a class="nav-link" href="women.html">Women</a></li>
+        <li class="nav-item"><a class="nav-link" href="men.html">Men</a></li>
+        <li class="nav-item"><a class="nav-link" href="accessories.html">Accessories</a></li>
+        <li class="nav-item"><a class="nav-link" href="sale.html">Sale</a></li>
+      </ul>
+    </div>
+    <div class="nav-icons d-flex align-items-center">
+      <a href="#" class="js-toggle-search" aria-label="Open search"><i class="bi bi-search"></i></a>
+      <a href="account.html" aria-label="Account"><i class="bi bi-person"></i></a>
+      <a href="wishlist.html" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+      <a href="#" class="cart-icon-wrap js-toggle-cart" aria-label="Shopping cart">
+        <i class="bi bi-bag"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <i class="bi bi-search search-icon" aria-hidden="true"></i>
+  <label for="searchInput" class="visually-hidden">Search products</label>
+  <input type="text" id="searchInput" placeholder="Search for products, collections..." aria-label="Search products">
+  <button class="search-close js-toggle-search" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="page-breadcrumb">
+  <div class="container-xl">
+    <a href="index.html">Home</a>
+    <span class="mx-2 text-muted">/</span>
+    <a href="#" id="breadcrumbCategory">Category</a>
+    <span class="mx-2 text-muted">/</span>
+    <span id="breadcrumbProduct">Product</span>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL SECTION -->
+<section class="contact-section">
+  <div class="container-xl">
+    <div class="row g-5">
+
+      <!-- Product Image -->
+      <div class="col-lg-6">
+        <img id="productImage" src="" alt="" style="width: 100%; aspect-ratio: 3/4; object-fit: cover;">
+      </div>
+
+      <!-- Product Info -->
+      <div class="col-lg-6">
+        <div class="section-label" id="productCategory"></div>
+        <h1 id="productName" style="font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; margin-bottom: 16px;"></h1>
+
+        <!-- Rating -->
+        <div class="product-rating mb-3" id="productRating"></div>
+
+        <!-- Price -->
+        <div class="mb-4" id="productPriceContainer"></div>
+
+        <!-- Badge -->
+        <div id="productBadge" class="mb-3"></div>
+
+        <!-- Size Selector -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Select Size</label>
+          <div class="d-flex gap-2" id="sizeSelector">
+            <button class="filter-tab" data-size="XS">XS</button>
+            <button class="filter-tab" data-size="S">S</button>
+            <button class="filter-tab active" data-size="M">M</button>
+            <button class="filter-tab" data-size="L">L</button>
+            <button class="filter-tab" data-size="XL">XL</button>
+          </div>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Quantity</label>
+          <div class="qty-controls">
+            <button class="qty-btn" id="decreaseQty">-</button>
+            <input type="number" class="qty-input" id="productQty" value="1" min="1" max="10" readonly>
+            <button class="qty-btn" id="increaseQty">+</button>
+          </div>
+        </div>
+
+        <!-- Add to Bag Button -->
+        <button class="btn-gold w-100 mb-3" id="addToBagBtn">Add to Bag</button>
+
+        <!-- Save to Wishlist Button -->
+        <button class="btn-outline-gold w-100 mb-4" id="addToWishlistBtn">
+          <i class="bi bi-heart me-2"></i>Save to Wishlist
+        </button>
+
+        <!-- Product Description -->
+        <div>
+          <h5 style="font-weight: 500; margin-bottom: 12px;">Description</h5>
+          <p class="about-text" id="productDescription"></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- YOU MAY ALSO LIKE SECTION -->
+<section class="products-section" style="padding-top: 0;">
+  <div class="container-xl">
+    <div class="section-label text-center">Recommended</div>
+    <h2 class="section-title text-center">You May Also Like</h2>
+    <div class="row g-4" id="recommendedProducts"></div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <div class="container-xl text-center">
+    <div class="section-label section-label-gold">Stay In The Know</div>
+    <h2 class="newsletter-title">Join the LUXE Circle</h2>
+    <p class="newsletter-sub">Exclusive previews, early access, and style inspiration — delivered to your inbox.</p>
+    <form class="newsletter-form mx-auto" id="newsletterForm" action="#" method="POST">
+      <label for="newsletterEmail" class="visually-hidden">Email address for newsletter</label>
+      <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <div id="newsletterMsg" class="newsletter-msg"></div>
+    <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container-xl">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <span class="footer-brand">Luxe</span>
+        <p class="footer-tagline">Where style meets substance. Curating the finest fashion pieces for the discerning individual since 2017.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/luxe" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+          <a href="https://facebook.com/luxe" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/luxe" class="social-btn" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+          <a href="https://pinterest.com/luxe" class="social-btn" aria-label="Pinterest"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Shop</div>
+        <ul class="footer-links">
+          <li><a href="collections.html">New Arrivals</a></li>
+          <li><a href="women.html">Women</a></li>
+          <li><a href="men.html">Men</a></li>
+          <li><a href="accessories.html">Accessories</a></li>
+          <li><a href="sale.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Help</div>
+        <ul class="footer-links">
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="shipping-returns.html">Shipping Info</a></li>
+          <li><a href="shipping-returns.html">Returns</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="sustainability.html">Sustainability</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@luxe.pk">hello@luxe.pk</a></li>
+          <li><a href="tel:+923001234567">+92 300 1234567</a></li>
+          <li><address class="footer-address">123 Fashion St,<br>Karachi, Pakistan</address></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2017&ndash;<span id="currentYear"></span> LUXE. All rights reserved.</p>
+      <div class="payment-icons">
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MC</span>
+        <span class="payment-icon">JazzCash</span>
+        <span class="payment-icon">EasyPaisa</span>
+        <span class="payment-icon">COD</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay js-toggle-cart" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true">
+  <div class="cart-header">
+    <h4>Shopping Bag <span class="cart-items-label" id="cartItemsLabel">(0 items)</span></h4>
+    <button class="cart-close js-toggle-cart"><i class="bi bi-x"></i></button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="empty-cart" id="emptyCart">
+      <i class="bi bi-bag"></i>
+      <p>Your bag is empty.<br>Start shopping to add items.</p>
+      <button class="btn-gold mt-3 js-toggle-cart">Continue Shopping</button>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">Rs. 0</strong>
+    </div>
+    <button class="btn-checkout">Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i></button>
+    <button class="btn-continue js-toggle-cart">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-msg" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+<script>
+  // Product detail page logic
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get product ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get('id'));
+
+    if (!productId || !products) {
+      window.location.href = 'collections.html';
+      return;
+    }
+
+    // Find product
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      window.location.href = 'collections.html';
+      return;
+    }
+
+    // Generate product description
+    const descriptions = {
+      'Silk Evening Gown': 'A luxurious silk evening gown that drapes beautifully, perfect for formal occasions. Features an elegant silhouette with timeless appeal.',
+      'Cashmere Wrap Coat': 'Premium cashmere wrap coat with a sophisticated design. Provides warmth and elegance for any winter occasion.',
+      'Leather Ankle Boots': 'Handcrafted leather ankle boots with exceptional comfort and durability. A versatile staple for any wardrobe.',
+      'Pearl Drop Earrings': 'Classic pearl drop earrings featuring lustrous pearls set in sterling silver. Timeless elegance for every ensemble.',
+      'Wool Peacoat': 'A tailored wool peacoat in a classic double-breasted design. Combines warmth with refined style.',
+      'Linen Blazer': 'Lightweight linen blazer perfect for warm weather occasions. Effortlessly stylish with a relaxed yet polished fit.',
+      'Oxford Dress Shoes': 'Traditional Oxford dress shoes crafted from premium leather. Essential footwear for the modern professional.',
+      'Silk Tie Set': 'Curated silk tie collection in sophisticated patterns and colors. Elevate your formal attire with timeless elegance.',
+      'Velvet Cocktail Dress': 'Sumptuous velvet cocktail dress with a flattering silhouette. Perfect for evening events and special occasions.',
+      'Merino Wool Sweater': 'Soft merino wool sweater in a classic crew neck design. Luxurious comfort meets everyday versatility.',
+      'Designer Sunglasses': 'Iconic designer sunglasses with UV protection and timeless style. A sophisticated accessory for any season.',
+      'Gold Bangle Set': 'Elegant gold bangle set featuring intricate detailing. Adds a touch of luxury to any outfit.'
+    };
+
+    const description = descriptions[product.name] || `Discover the ${product.name}, a masterpiece of craftsmanship and design. This exquisite piece combines premium materials with timeless style.`;
+
+    // Populate page
+    document.getElementById('pageTitle').textContent = `${product.name} — LUXE`;
+    document.getElementById('productImage').src = product.img;
+    document.getElementById('productImage').alt = product.name;
+    document.getElementById('productCategory').textContent = product.category;
+    document.getElementById('productName').textContent = product.name;
+    document.getElementById('productDescription').textContent = description;
+
+    // Breadcrumb
+    const categoryMap = {
+      'Women': 'women.html',
+      'Men': 'men.html',
+      'Accessories': 'accessories.html'
+    };
+    const categoryLink = document.getElementById('breadcrumbCategory');
+    categoryLink.textContent = product.category;
+    categoryLink.href = categoryMap[product.category] || 'collections.html';
+    document.getElementById('breadcrumbProduct').textContent = product.name;
+
+    // Rating
+    const rating = product.rating || 5;
+    const reviews = product.reviews || Math.floor(Math.random() * 50) + 10;
+    let ratingHTML = '';
+    for (let i = 0; i < 5; i++) {
+      ratingHTML += i < rating ? '<i class="bi bi-star-fill" style="color: var(--gold);"></i>' : '<i class="bi bi-star" style="color: var(--gold);"></i>';
+    }
+    ratingHTML += ` <span class="text-muted ms-2">(${reviews} reviews)</span>`;
+    document.getElementById('productRating').innerHTML = ratingHTML;
+
+    // Price
+    let priceHTML = `<h3 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; margin: 0;">Rs. ${product.price.toLocaleString()}</h3>`;
+    if (product.oldPrice) {
+      priceHTML += `<p class="text-muted" style="text-decoration: line-through; margin: 0;">Rs. ${product.oldPrice.toLocaleString()}</p>`;
+    }
+    document.getElementById('productPriceContainer').innerHTML = priceHTML;
+
+    // Badge
+    if (product.badge) {
+      document.getElementById('productBadge').innerHTML = `<span class="badge bg-dark" style="font-size: 12px; padding: 6px 12px;">${product.badge}</span>`;
+    }
+
+    // Size selection
+    let selectedSize = 'M';
+    const sizeBtns = document.querySelectorAll('#sizeSelector .filter-tab');
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSize = btn.dataset.size;
+      });
+    });
+
+    // Quantity controls
+    let quantity = 1;
+    const qtyInput = document.getElementById('productQty');
+    document.getElementById('increaseQty').addEventListener('click', () => {
+      if (quantity < 10) {
+        quantity++;
+        qtyInput.value = quantity;
+      }
+    });
+    document.getElementById('decreaseQty').addEventListener('click', () => {
+      if (quantity > 1) {
+        quantity--;
+        qtyInput.value = quantity;
+      }
+    });
+
+    // Add to Bag
+    document.getElementById('addToBagBtn').addEventListener('click', () => {
+      const cartItem = {
+        ...product,
+        size: selectedSize,
+        quantity: quantity
+      };
+
+      // Check if item with same size already exists
+      const existingIndex = cart.findIndex(item => item.id === product.id && item.size === selectedSize);
+      if (existingIndex > -1) {
+        cart[existingIndex].quantity += quantity;
+      } else {
+        cart.push(cartItem);
+      }
+
+      saveCart();
+      updateCart();
+      showToast(`${product.name} (Size ${selectedSize}) added to bag!`);
+    });
+
+    // Add to Wishlist
+    document.getElementById('addToWishlistBtn').addEventListener('click', () => {
+      let wishlist = JSON.parse(localStorage.getItem('luxe-wishlist')) || [];
+      if (!wishlist.find(item => item.id === product.id)) {
+        wishlist.push(product);
+        localStorage.setItem('luxe-wishlist', JSON.stringify(wishlist));
+        showToast(`${product.name} added to wishlist!`);
+        updateWishlistBadge();
+      } else {
+        showToast(`${product.name} is already in your wishlist.`);
+      }
+    });
+
+    // Recommended products - show 4 random products from same category or all
+    const otherProducts = products.filter(p => p.id !== productId);
+    const shuffled = otherProducts.sort(() => 0.5 - Math.random());
+    const recommended = shuffled.slice(0, 4);
+
+    const recommendedContainer = document.getElementById('recommendedProducts');
+    recommended.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'col-md-6 col-lg-3';
+      card.innerHTML = `
+        <div class="product-card">
+          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <div class="product-img-wrap">
+              <img src="${p.img}" alt="${p.name}" class="product-img" loading="lazy">
+              ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+            </div>
+          </a>
+          <div class="product-info">
+            <div class="product-cat">${p.category}</div>
+            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+              <div class="product-name">${p.name}</div>
+            </a>
+            <div class="product-price">
+              Rs. ${p.price.toLocaleString()}
+              ${p.oldPrice ? `<span class="product-old-price">Rs. ${p.oldPrice.toLocaleString()}</span>` : ''}
+            </div>
+          </div>
+          <button class="btn-add-cart" onclick="quickAddToCart(${p.id})">Add to Bag</button>
+        </div>
+      `;
+      recommendedContainer.appendChild(card);
+    });
+  });
+</script>
+</body>
+</html>

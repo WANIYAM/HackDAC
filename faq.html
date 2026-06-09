@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LUXE — FAQ. Find answers to frequently asked questions about orders, shipping, returns, and more.">
+<title>LUXE — FAQ</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  <span>✦ Free Shipping on Orders Above Rs. 5,000 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; New Collection Arrived — Shop Now ✦</span>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-xl">
+    <a class="navbar-brand" href="index.html">Luxe</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list navbar-toggler-icon-custom"></i>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navMenu">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="collections.html">Collections</a></li>
+        <li class="nav-item"><a class="nav-link" href="women.html">Women</a></li>
+        <li class="nav-item"><a class="nav-link" href="men.html">Men</a></li>
+        <li class="nav-item"><a class="nav-link" href="accessories.html">Accessories</a></li>
+        <li class="nav-item"><a class="nav-link" href="sale.html">Sale</a></li>
+      </ul>
+    </div>
+    <div class="nav-icons d-flex align-items-center">
+      <a href="#" class="js-toggle-search" aria-label="Open search"><i class="bi bi-search"></i></a>
+      <a href="account.html" aria-label="Account"><i class="bi bi-person"></i></a>
+      <a href="wishlist.html" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+      <a href="#" class="cart-icon-wrap js-toggle-cart" aria-label="Shopping cart">
+        <i class="bi bi-bag"></i>
+        <span class="cart-badge" id="cartCount">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <i class="bi bi-search search-icon" aria-hidden="true"></i>
+  <label for="searchInput" class="visually-hidden">Search products</label>
+  <input type="text" id="searchInput" placeholder="Search for products, collections..." aria-label="Search products">
+  <button class="search-close js-toggle-search" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80')"></div>
+  <div class="container-xl">
+    <div class="section-label">Help Centre</div>
+    <h1 class="page-hero-title">FAQ</h1>
+    <p class="page-hero-subtitle">Answers to our most commonly asked questions.</p>
+  </div>
+</section>
+
+<!-- BREADCRUMB -->
+<div class="page-breadcrumb">
+  <div class="container-xl">
+    <a href="index.html">Home</a>
+    <span class="mx-2 text-muted">/</span>
+    <span>FAQ</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<section class="contact-section">
+  <div class="container-xl">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+
+        <!-- Orders & Payment -->
+        <h4 class="about-heading" style="font-size: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px;">Orders & Payment</h4>
+        <div class="accordion mb-5" id="ordersFAQ">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#order1" aria-expanded="true" aria-controls="order1">
+                What payment methods do you accept?
+              </button>
+            </h2>
+            <div id="order1" class="accordion-collapse collapse show" data-bs-parent="#ordersFAQ">
+              <div class="accordion-body">
+                We accept all major credit and debit cards (Visa, Mastercard), JazzCash, EasyPaisa, bank transfers, and cash on delivery (COD) for orders within Pakistan. All online payments are processed securely through our payment gateway with SSL encryption to protect your personal information.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order2" aria-expanded="false" aria-controls="order2">
+                How can I track my order?
+              </button>
+            </h2>
+            <div id="order2" class="accordion-collapse collapse" data-bs-parent="#ordersFAQ">
+              <div class="accordion-body">
+                Once your order is dispatched, you'll receive a confirmation email with a tracking number. You can track your package by entering this number on our courier partner's website, or by logging into your LUXE account and viewing your order history. If you haven't received tracking information within 24 hours of placing your order, please contact our customer service team.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order3" aria-expanded="false" aria-controls="order3">
+                Can I modify or cancel my order?
+              </button>
+            </h2>
+            <div id="order3" class="accordion-collapse collapse" data-bs-parent="#ordersFAQ">
+              <div class="accordion-body">
+                We process orders quickly to ensure fast delivery. If you need to modify or cancel your order, please contact us immediately at hello@luxe.pk or +92 300 1234567. If your order hasn't been dispatched yet, we'll do our best to accommodate your request. Once shipped, you'll need to wait for delivery and initiate a return if needed.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order4" aria-expanded="false" aria-controls="order4">
+                Is there a minimum order amount?
+              </button>
+            </h2>
+            <div id="order4" class="accordion-collapse collapse" data-bs-parent="#ordersFAQ">
+              <div class="accordion-body">
+                There is no minimum order amount at LUXE. However, orders above Rs. 5,000 qualify for free standard shipping. For orders under Rs. 5,000, standard shipping charges of Rs. 200 will apply.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping & Delivery -->
+        <h4 class="about-heading" style="font-size: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px;">Shipping & Delivery</h4>
+        <div class="accordion mb-5" id="shippingFAQ">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping1" aria-expanded="false" aria-controls="shipping1">
+                How long does delivery take?
+              </button>
+            </h2>
+            <div id="shipping1" class="accordion-collapse collapse" data-bs-parent="#shippingFAQ">
+              <div class="accordion-body">
+                Standard delivery takes 3–5 business days for most locations across Pakistan. We also offer express delivery (1–2 business days) for major cities including Karachi, Lahore, Islamabad, and Rawalpindi. Delivery times may be longer during peak seasons, public holidays, or for remote areas.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping2" aria-expanded="false" aria-controls="shipping2">
+                Do you ship internationally?
+              </button>
+            </h2>
+            <div id="shipping2" class="accordion-collapse collapse" data-bs-parent="#shippingFAQ">
+              <div class="accordion-body">
+                Currently, we only ship within Pakistan. We're working on expanding our services to include international shipping. If you're interested in international delivery, please contact us at hello@luxe.pk and we'll notify you once this service becomes available.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping3" aria-expanded="false" aria-controls="shipping3">
+                What if I'm not home when my order arrives?
+              </button>
+            </h2>
+            <div id="shipping3" class="accordion-collapse collapse" data-bs-parent="#shippingFAQ">
+              <div class="accordion-body">
+                Our courier partner will attempt delivery up to three times. If you're not available, they'll leave a delivery notice with instructions for rescheduling or picking up your package from the nearest courier office. You'll also receive notifications via SMS and email about delivery attempts.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping4" aria-expanded="false" aria-controls="shipping4">
+                How much does shipping cost?
+              </button>
+            </h2>
+            <div id="shipping4" class="accordion-collapse collapse" data-bs-parent="#shippingFAQ">
+              <div class="accordion-body">
+                Standard shipping is free for orders above Rs. 5,000. For orders under Rs. 5,000, standard shipping costs Rs. 200. Express delivery is available for an additional Rs. 350 and guarantees delivery within 1–2 business days to major cities.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Returns & Refunds -->
+        <h4 class="about-heading" style="font-size: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px;">Returns & Refunds</h4>
+        <div class="accordion mb-5" id="returnsFAQ">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return1" aria-expanded="false" aria-controls="return1">
+                What is your return policy?
+              </button>
+            </h2>
+            <div id="return1" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+              <div class="accordion-body">
+                We offer a 30-day return policy from the date of delivery. Items must be unused, unworn, and in their original condition with all tags attached. Sale items, intimate apparel, earrings, and personalized products cannot be returned. For hygiene and safety reasons, we cannot accept returns on certain items.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return2" aria-expanded="false" aria-controls="return2">
+                How do I initiate a return?
+              </button>
+            </h2>
+            <div id="return2" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+              <div class="accordion-body">
+                To initiate a return, log into your account and go to your order history. Select the order you wish to return and click "Request Return." You can also contact our customer service team at hello@luxe.pk or +92 300 1234567. We'll provide you with return instructions and arrange for pickup if applicable.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return3" aria-expanded="false" aria-controls="return3">
+                How long does it take to receive my refund?
+              </button>
+            </h2>
+            <div id="return3" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+              <div class="accordion-body">
+                Once we receive your returned item and verify it meets our return policy requirements, your refund will be processed within 7 business days. The refund will be credited to your original payment method. Depending on your bank or payment provider, it may take an additional 3–5 business days for the refund to appear in your account.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return4" aria-expanded="false" aria-controls="return4">
+                Can I exchange an item instead of returning it?
+              </button>
+            </h2>
+            <div id="return4" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+              <div class="accordion-body">
+                Yes, we offer exchanges for different sizes or colors of the same item, subject to availability. To request an exchange, contact our customer service team. If you'd like a completely different product, we recommend processing a return for a refund and placing a new order to ensure you get exactly what you want.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products & Sizing -->
+        <h4 class="about-heading" style="font-size: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 24px;">Products & Sizing</h4>
+        <div class="accordion mb-5" id="productsFAQ">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#product1" aria-expanded="false" aria-controls="product1">
+                How do I find my size?
+              </button>
+            </h2>
+            <div id="product1" class="accordion-collapse collapse" data-bs-parent="#productsFAQ">
+              <div class="accordion-body">
+                Each product page includes a detailed size guide with measurements in centimeters and inches. We recommend measuring yourself and comparing your measurements to our size chart for the best fit. If you're between sizes, we generally suggest sizing up for comfort. You can also contact our customer service team for personalized sizing advice.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#product2" aria-expanded="false" aria-controls="product2">
+                Are the product colors accurate?
+              </button>
+            </h2>
+            <div id="product2" class="accordion-collapse collapse" data-bs-parent="#productsFAQ">
+              <div class="accordion-body">
+                We make every effort to display colors as accurately as possible. However, due to differences in monitor settings and lighting conditions, actual product colors may vary slightly from what appears on your screen. Each product includes multiple images from different angles and lighting conditions to give you the best representation.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#product3" aria-expanded="false" aria-controls="product3">
+                How do I care for my LUXE items?
+              </button>
+            </h2>
+            <div id="product3" class="accordion-collapse collapse" data-bs-parent="#productsFAQ">
+              <div class="accordion-body">
+                Care instructions are provided on the product tag and description page for each item. Generally, we recommend following the care label instructions carefully. For delicate fabrics and luxury items, we suggest professional dry cleaning. Proper care will help maintain the quality and longevity of your LUXE pieces.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#product4" aria-expanded="false" aria-controls="product4">
+                When will out-of-stock items be restocked?
+              </button>
+            </h2>
+            <div id="product4" class="accordion-collapse collapse" data-bs-parent="#productsFAQ">
+              <div class="accordion-body">
+                Restock timelines vary depending on the item and our suppliers. You can sign up for restock notifications on any out-of-stock product page, and we'll email you as soon as the item becomes available again. For popular items, we recommend acting quickly when notified as they may sell out again fast.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Still Have Questions Callout -->
+        <div class="text-center" style="border: 2px solid var(--gold); padding: 48px 32px; margin-top: 64px;">
+          <i class="bi bi-chat-dots" style="font-size: 48px; color: var(--gold); margin-bottom: 16px;"></i>
+          <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; margin-bottom: 12px;">Still have questions?</h4>
+          <p class="text-muted mb-4">Can't find the answer you're looking for? Our customer service team is here to help.</p>
+          <a href="contact.html" class="btn-gold">Contact Us</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <div class="container-xl text-center">
+    <div class="section-label section-label-gold">Stay In The Know</div>
+    <h2 class="newsletter-title">Join the LUXE Circle</h2>
+    <p class="newsletter-sub">Exclusive previews, early access, and style inspiration — delivered to your inbox.</p>
+    <form class="newsletter-form mx-auto" id="newsletterForm" action="#" method="POST">
+      <label for="newsletterEmail" class="visually-hidden">Email address for newsletter</label>
+      <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter" required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <div id="newsletterMsg" class="newsletter-msg"></div>
+    <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container-xl">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <span class="footer-brand">Luxe</span>
+        <p class="footer-tagline">Where style meets substance. Curating the finest fashion pieces for the discerning individual since 2017.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/luxe" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+          <a href="https://facebook.com/luxe" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/luxe" class="social-btn" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+          <a href="https://pinterest.com/luxe" class="social-btn" aria-label="Pinterest"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Shop</div>
+        <ul class="footer-links">
+          <li><a href="collections.html">New Arrivals</a></li>
+          <li><a href="women.html">Women</a></li>
+          <li><a href="men.html">Men</a></li>
+          <li><a href="accessories.html">Accessories</a></li>
+          <li><a href="sale.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Help</div>
+        <ul class="footer-links">
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="shipping-returns.html">Shipping Info</a></li>
+          <li><a href="shipping-returns.html">Returns</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="sustainability.html">Sustainability</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@luxe.pk">hello@luxe.pk</a></li>
+          <li><a href="tel:+923001234567">+92 300 1234567</a></li>
+          <li><address class="footer-address">123 Fashion St,<br>Karachi, Pakistan</address></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2017&ndash;<span id="currentYear"></span> LUXE. All rights reserved.</p>
+      <div class="payment-icons">
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MC</span>
+        <span class="payment-icon">JazzCash</span>
+        <span class="payment-icon">EasyPaisa</span>
+        <span class="payment-icon">COD</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay js-toggle-cart" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true">
+  <div class="cart-header">
+    <h4>Shopping Bag <span class="cart-items-label" id="cartItemsLabel">(0 items)</span></h4>
+    <button class="cart-close js-toggle-cart"><i class="bi bi-x"></i></button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="empty-cart" id="emptyCart">
+      <i class="bi bi-bag"></i>
+      <p>Your bag is empty.<br>Start shopping to add items.</p>
+      <button class="btn-gold mt-3 js-toggle-cart">Continue Shopping</button>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">Rs. 0</strong>
+    </div>
+    <button class="btn-checkout">Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i></button>
+    <button class="btn-continue js-toggle-cart">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-msg" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
