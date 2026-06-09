@@ -5,7 +5,7 @@
 
 const products = [
   { id:1, name:"Silk Drape Midi Dress", cat:"Women", price:8500, oldPrice:null, badge:"new", rating:5, reviews:24, img:"assets/Silk Drape Midi Dress.jpg", category:"women" },
-  { id:2, name:"Structured Blazer", cat:"Women", price:12000, oldPrice:16000, badge:"sale", rating:4, reviews:18, img:"assets/Structured Blazer.jpg", category:"women" },
+  { id:2, name:"Structured Blazer", cat:"Men", price:12000, oldPrice:16000, badge:"sale", rating:4, reviews:18, img:"assets/Structured Blazer.jpg", category:"men" },
   { id:3, name:"Slim Fit Linen Suit", cat:"Men", price:18500, oldPrice:null, badge:"new", rating:5, reviews:11, img:"assets/Slim Fit Linen Suit.jpg", category:"men" },
   { id:4, name:"Premium Leather Tote", cat:"Accessories", price:9200, oldPrice:13000, badge:"sale", rating:5, reviews:32, img:"assets/Premium Leather Tote.jpg", category:"accessories" },
   { id:5, name:"Floral Wrap Dress", cat:"Women", price:6800, oldPrice:null, badge:null, rating:4, reviews:15, img:"assets/Floral Wrap Dress.jpg", category:"women" },
@@ -16,7 +16,7 @@ const products = [
   { id:10, name:"Pleated Maxi Skirt", cat:"Women", price:7500, oldPrice:10000, badge:"sale", rating:4, reviews:21, img:"assets/Pleated Maxi Skirt.jpg", category:"women" },
   { id:11, name:"Embroidered Tunic Top", cat:"Women", price:5500, oldPrice:null, badge:null, rating:4, reviews:19, img:"assets/Embroidered Tunic Top.jpg", category:"women" },
   { id:12, name:"Satin Slip Dress", cat:"Women", price:9800, oldPrice:null, badge:null, rating:5, reviews:16, img:"assets/Satin Slip Dress.jpg", category:"women" },
-  { id:13, name:"Wool Overcoat", cat:"Men", price:22000, oldPrice:null, badge:"new", rating:5, reviews:14, img:"assets/Wool Overcoat.jpg", category:"men" },
+  { id:13, name:"Wool Overcoat", cat:"Women", price:22000, oldPrice:null, badge:"new", rating:5, reviews:14, img:"assets/Wool Overcoat.jpg", category:"women" },
   { id:14, name:"Chinos — Slim Fit", cat:"Men", price:6500, oldPrice:8500, badge:"sale", rating:4, reviews:27, img:"assets/Chinos — Slim Fit.jpg", category:"men" },
   { id:15, name:"Denim Jacket", cat:"Men", price:8900, oldPrice:null, badge:null, rating:4, reviews:33, img:"assets/Denim Jacket.jpg", category:"men" },
   { id:16, name:"Knit Sweater", cat:"Men", price:7200, oldPrice:null, badge:null, rating:5, reviews:18, img:"assets/Knit Sweater.jpg", category:"men" },
