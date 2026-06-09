@@ -32,6 +32,7 @@ const products = [
 
 let cart = JSON.parse(localStorage.getItem('luxe_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('luxe_wishlist') || '[]');
+let currentDiscount = 0;
 
 function saveCart() {
   localStorage.setItem('luxe_cart', JSON.stringify(cart));
@@ -52,7 +53,7 @@ function renderProducts(list) {
     grid.innerHTML += `
       <div class="col-6 col-lg-3 product-data" data-cat="${p.category}">
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+          <a href="product.html?id=${p.id}" style="display: block;">
             <div class="product-img-wrap">
               ${badgeHtml}
               <img src="${p.img}" alt="${p.name}" loading="lazy">
@@ -60,11 +61,11 @@ function renderProducts(list) {
           </a>
           <div class="product-actions">
             <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
-            <button class="btn-wishlist js-wishlist" data-id="${p.id}"><i class="bi bi-heart"></i></button>
+            <button class="btn-wishlist js-wishlist" data-id="${p.id}" aria-label="Add ${p.name} to wishlist"><i class="bi bi-heart"></i></button>
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <a href="product.html?id=${p.id}" style="color: inherit; text-decoration: none;">
               <h5>${p.name}</h5>
             </a>
             <div class="product-price">${oldPriceHtml}Rs. ${p.price.toLocaleString()}</div>
@@ -85,7 +86,7 @@ function appendProducts(list) {
     grid.innerHTML += `
       <div class="col-6 col-lg-3 product-data" data-cat="${p.category}">
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+          <a href="product.html?id=${p.id}" style="display: block;">
             <div class="product-img-wrap">
               ${badgeHtml}
               <img src="${p.img}" alt="${p.name}" loading="lazy">
@@ -93,11 +94,11 @@ function appendProducts(list) {
           </a>
           <div class="product-actions">
             <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
-            <button class="btn-wishlist js-wishlist" data-id="${p.id}"><i class="bi bi-heart"></i></button>
+            <button class="btn-wishlist js-wishlist" data-id="${p.id}" aria-label="Add ${p.name} to wishlist"><i class="bi bi-heart"></i></button>
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <a href="product.html?id=${p.id}" style="color: inherit; text-decoration: none;">
               <h5>${p.name}</h5>
             </a>
             <div class="product-price">${oldPriceHtml}Rs. ${p.price.toLocaleString()}</div>
@@ -115,8 +116,12 @@ let currentFilteredProducts = [];
 
 function filterProducts(cat, btn) {
   if (btn) {
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.filter-tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
   }
   currentCategoryFilter = cat;
   currentDisplayCount = 8; // Reset to 8 when filtering changes
@@ -247,9 +252,9 @@ function updateCart() {
             <h6>${c.name}</h6>
             <p>${c.cat}</p>
             <div class="qty-controls">
-              <button class="qty-btn js-change-qty" data-id="${c.id}" data-delta="-1">−</button>
+              <button class="qty-btn js-change-qty" data-id="${c.id}" data-delta="-1" aria-label="Decrease quantity of ${c.name}">−</button>
               <span class="qty-display">${c.qty}</span>
-              <button class="qty-btn js-change-qty" data-id="${c.id}" data-delta="1">+</button>
+              <button class="qty-btn js-change-qty" data-id="${c.id}" data-delta="1" aria-label="Increase quantity of ${c.name}">+</button>
             </div>
           </div>
           <div class="cart-item-price">Rs. ${(Number(c.price) * c.qty).toLocaleString()}</div>
@@ -356,18 +361,18 @@ function renderWishlist() {
     grid.innerHTML += `
       <div class="col-6 col-lg-3">
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+          <a href="product.html?id=${p.id}" style="display: block;">
             <div class="product-img-wrap">
               <img src="${p.img}" alt="${p.name}" loading="lazy">
             </div>
           </a>
           <div class="product-actions">
             <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
-            <button class="btn-wishlist js-wishlist" data-id="${p.id}" style="color: var(--danger);"><i class="bi bi-heart-fill"></i></button>
+            <button class="btn-wishlist js-wishlist" data-id="${p.id}" style="color: var(--danger);" aria-label="Remove ${p.name} from wishlist"><i class="bi bi-heart-fill"></i></button>
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <a href="product.html?id=${p.id}" style="color: inherit; text-decoration: none;">
               <h5>${p.name}</h5>
             </a>
             <div class="product-price">Rs. ${p.price.toLocaleString()}</div>
@@ -413,7 +418,9 @@ function renderCheckout() {
   list.innerHTML = html;
   const totalStr = 'Rs. ' + total.toLocaleString();
   if (subtotalEl) subtotalEl.textContent = totalStr;
-  if (totalEl) totalEl.textContent = totalStr;
+  
+  const discountedTotal = total - (total * currentDiscount);
+  if (totalEl) totalEl.textContent = 'Rs. ' + discountedTotal.toLocaleString();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -441,8 +448,23 @@ document.addEventListener('DOMContentLoaded', () => {
   startCountdown();
   updateCart();
 
+  // Auto-initialize page-specific renders
+  if (document.getElementById('wishlistGrid')) {
+    renderWishlist();
+  }
+  if (document.getElementById('checkoutItemsList')) {
+    renderCheckout();
+  }
+
   const yearEl = document.getElementById('currentYear');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Generate order number for order confirmation page
+  const orderNumberEl = document.getElementById('orderNumber');
+  if (orderNumberEl) {
+    const randomNum = Math.floor(100000 + Math.random() * 900000);
+    orderNumberEl.textContent = '#LX-' + randomNum;
+  }
 
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
@@ -554,6 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sortSelect = document.getElementById('sortSelect');
   if (sortSelect) {
     sortSelect.addEventListener('change', (e) => {
+      if (window.location.pathname.toLowerCase().includes('search.html')) return;
       currentSortOrder = e.target.value;
       currentDisplayCount = 8; // Reset to 8 when sorting changes
       applyFiltersAndSort();
@@ -581,6 +604,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Login Form Handler
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('Successfully signed in. Redirecting...');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+    });
+  }
+
+  // Promo Code Handlers
+  const togglePromoBtn = document.getElementById('togglePromoBtn');
+  const promoContainer = document.getElementById('promoContainer');
+  const applyPromoBtn = document.getElementById('applyPromoBtn');
+  const promoInput = document.getElementById('promoInput');
+
+  if (togglePromoBtn && promoContainer) {
+    togglePromoBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      promoContainer.style.display = promoContainer.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+
+  if (applyPromoBtn && promoInput) {
+    applyPromoBtn.addEventListener('click', () => {
+      const code = promoInput.value.trim().toUpperCase();
+      if (code === 'LUXE10') {
+        currentDiscount = 0.10;
+        renderCheckout();
+        showToast('10% discount applied!');
+      } else {
+        currentDiscount = 0;
+        renderCheckout();
+        showToast('Invalid promo code.');
+      }
+    });
+  }
+
   // Checkout Form Submission
   const checkoutForm = document.getElementById('checkoutForm');
   if (checkoutForm) {
@@ -592,6 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       showToast('Order placed successfully! Thank you for shopping with LUXE.');
       cart = [];
+      currentDiscount = 0;
       saveCart();
       updateCart();
       checkoutForm.reset();
