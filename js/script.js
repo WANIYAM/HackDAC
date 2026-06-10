@@ -1761,6 +1761,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ========================================
+  // BACK TO TOP BUTTON
+  // ========================================
+  const backToTopButton = document.getElementById('backToTop');
+  if (backToTopButton) {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        backToTopButton.classList.add('visible');
+      } else {
+        backToTopButton.classList.remove('visible');
+      }
+      ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleScroll);
+        ticking = true;
+        setTimeout(() => {
+          ticking = false;
+        }, 100);
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   // Dynamic nav-link active state based on current URL
   const navLinks = document.querySelectorAll('.nav-link');
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
