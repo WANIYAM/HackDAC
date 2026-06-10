@@ -760,7 +760,7 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
 .section-label-gold { color: var(--gold); }
 
 /* Footer address */
-.footer-address { font-style: normal; margin: 0; line-height: 1.6; }
+.footer-address { font-style: normal; margin: 0; line-height: 1.6; color: #FFFFFF73; }
 
 /* Cart items label in sidebar */
 .cart-items-label { font-size: 14px; color: var(--muted); font-family: 'Outfit', sans-serif; }
