@@ -20,6 +20,15 @@
 </head>
 <body>
 
+<div class="page-loader" id="pageLoader">
+  <div class="loader-content">
+    <div class="loader-brand">Luxe</div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loaderBar"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ANNOUNCEMENT BAR -->
 <div class="announcement-bar">
   <span>✦ Free Shipping on Orders Above Rs. 5,000 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; New Collection Arrived — Shop Now ✦</span>
@@ -80,11 +89,14 @@
 
       <!-- Product Image -->
       <div class="col-lg-6">
-        <img id="productImage" src="" alt="" class="product-detail-img">
+        <div class="product-img-wrap" style="position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden;">
+          <div class="img-skeleton" id="main-skel" style="position: absolute; top: 0; left: 0; z-index: 1; width: 100%; height: 100%; background-size: 800px 100%;"></div>
+          <img id="productImage" src="" alt="" class="product-detail-img product-card-img" data-skelid="main-skel" style="position: absolute; top: 0; left: 0; z-index: 2; width: 100%; height: 100%;">
+        </div>
       </div>
 
       <!-- Product Info -->
-      <div class="col-lg-6">
+      <div class="col-lg-6" id="productDetails">
         <div class="section-label" id="productCategory"></div>
         <h1 id="productName" class="product-detail-title"></h1>
 
@@ -257,6 +269,25 @@
 <!-- TOAST -->
 <div class="toast-msg" id="toast"></div>
 
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <i class="bi bi-arrow-up" aria-hidden="true"></i>
+</button>
+
+<div class="sticky-atb" id="stickyATB">
+  <div class="container-xl">
+    <div class="sticky-atb-inner">
+      <div class="sticky-atb-info">
+        <span class="sticky-atb-name" id="stickyProductName">—</span>
+        <span class="sticky-atb-price" id="stickyProductPrice">—</span>
+      </div>
+      <div class="sticky-atb-actions">
+        <div class="sticky-size-wrap" id="stickySizeWrap"></div>
+        <button class="sticky-atb-btn" id="stickyAddToCart">Add to Bag</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
 <script>
@@ -306,6 +337,21 @@
     document.getElementById('pageTitle').textContent = `${product.name} — LUXE`;
     document.getElementById('productImage').src = product.img;
     document.getElementById('productImage').alt = product.name;
+    
+    // Handle main product image load/error
+    document.getElementById('productImage').addEventListener('load', function() {
+      const skeleton = document.getElementById('main-skel');
+      if (skeleton) skeleton.style.display = 'none';
+      this.classList.add('loaded');
+    });
+    document.getElementById('productImage').addEventListener('error', function() {
+      const skeleton = document.getElementById('main-skel');
+      if (skeleton) {
+        skeleton.innerHTML = `<div class="img-skeleton-unavailable"><i class="bi bi-image" aria-hidden="true"></i><p>Image unavailable</p></div>`;
+        skeleton.classList.remove('img-skeleton');
+      }
+      this.style.display = 'none';
+    });
     document.getElementById('productCategory').textContent = product.cat;
     document.getElementById('productName').textContent = product.name;
     document.getElementById('productDescription').textContent = description;
@@ -427,7 +473,8 @@
         <div class="product-card">
           <a href="product.html?id=${p.id}" class="product-link">
             <div class="product-img-wrap">
-              <img src="${p.img}" alt="${p.name}" class="product-img" loading="lazy">
+              <div class="img-skeleton" id="skel-rec-${p.id}"></div>
+              <img src="${p.img}" alt="${p.name}" class="product-img product-card-img" loading="lazy" data-skelid="skel-rec-${p.id}">
               ${p.badge ? `<span class="product-badge badge-sale">${p.badge}</span>` : ''}
             </div>
           </a>
@@ -446,6 +493,107 @@
       `;
       recommendedContainer.appendChild(card);
     });
+
+    // Setup event delegation for recommended product images
+    recommendedContainer.addEventListener('load', function(e) {
+      if (e.target.tagName === 'IMG' && e.target.classList.contains('product-card-img')) {
+        const skelId = e.target.getAttribute('data-skelid');
+        if (skelId) {
+          const skeleton = document.getElementById(skelId);
+          if (skeleton) skeleton.style.display = 'none';
+        }
+        e.target.classList.add('loaded');
+      }
+    }, true);
+    recommendedContainer.addEventListener('error', function(e) {
+      if (e.target.tagName === 'IMG' && e.target.classList.contains('product-card-img')) {
+        const skelId = e.target.getAttribute('data-skelid');
+        if (skelId) {
+          const skeleton = document.getElementById(skelId);
+          if (skeleton) {
+            skeleton.innerHTML = `<div class="img-skeleton-unavailable"><i class="bi bi-image" aria-hidden="true"></i><p>Image unavailable</p></div>`;
+            skeleton.classList.remove('img-skeleton');
+          }
+        }
+        e.target.style.display = 'none';
+      }
+    }, true);
+
+    // ========================================
+    // POPULATE STICKY ADD-TO-BAG BAR
+    // ========================================
+    document.getElementById('stickyProductName').textContent = product.name;
+    document.getElementById('stickyProductPrice').textContent = `Rs. ${product.price.toLocaleString()}`;
+
+    // Clone size buttons to sticky bar
+    const stickySizeWrap = document.getElementById('stickySizeWrap');
+    const sizeButtons = document.querySelectorAll('#sizeSelector .filter-tab');
+    sizeButtons.forEach(btn => {
+      const stickyBtn = btn.cloneNode(true);
+      stickyBtn.className = 'filter-tab sticky-size-btn';
+      stickyBtn.addEventListener('click', () => {
+        // Update main size selector
+        document.querySelectorAll('#sizeSelector .filter-tab').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        document.querySelector(`#sizeSelector .filter-tab[data-size="${stickyBtn.dataset.size}"]`).classList.add('active');
+        document.querySelector(`#sizeSelector .filter-tab[data-size="${stickyBtn.dataset.size}"]`).setAttribute('aria-pressed', 'true');
+
+        // Update sticky size buttons
+        document.querySelectorAll('.sticky-size-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        stickyBtn.classList.add('active');
+        stickyBtn.setAttribute('aria-pressed', 'true');
+
+        selectedSize = stickyBtn.dataset.size;
+      });
+      stickySizeWrap.appendChild(stickyBtn);
+    });
+
+    // Sync main size selector with sticky bar
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update sticky size buttons
+        document.querySelectorAll('.sticky-size-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        const stickyBtn = document.querySelector(`.sticky-size-btn[data-size="${btn.dataset.size}"]`);
+        if (stickyBtn) {
+          stickyBtn.classList.add('active');
+          stickyBtn.setAttribute('aria-pressed', 'true');
+        }
+      });
+    });
+
+    // Sticky Add to Bag button
+    document.getElementById('stickyAddToCart').addEventListener('click', () => {
+      const cartItem = {
+        ...product,
+        size: selectedSize,
+        qty: quantity
+      };
+
+      // Check if item with same size already exists
+      const existingIndex = cart.findIndex(item => item.id === product.id && item.size === selectedSize);
+      if (existingIndex > -1) {
+        cart[existingIndex].qty += quantity;
+      } else {
+        cart.push(cartItem);
+      }
+
+      saveCart();
+      updateCart();
+      showToast(`${product.name} (Size ${selectedSize}) added to bag!`);
+    });
+
+    // Dismiss page loader after product is fully rendered
+    if (typeof window.dismissPageLoader === 'function') {
+      window.dismissPageLoader();
+    }
   });
 </script>
 </body>

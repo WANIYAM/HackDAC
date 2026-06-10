@@ -174,6 +174,32 @@ let cart = JSON.parse(localStorage.getItem('luxe_cart') || '[]');
 let wishlist = JSON.parse(localStorage.getItem('luxe_wishlist') || '[]');
 let currentDiscount = 0;
 
+// Image skeleton handlers
+function handleImageLoad(e) {
+  if (e.target.tagName === 'IMG' && e.target.classList.contains('product-card-img')) {
+    const skelId = e.target.getAttribute('data-skelid');
+    if (skelId) {
+      const skeleton = document.getElementById(skelId);
+      if (skeleton) skeleton.style.display = 'none';
+    }
+    e.target.classList.add('loaded');
+  }
+}
+
+function handleImageError(e) {
+  if (e.target.tagName === 'IMG' && e.target.classList.contains('product-card-img')) {
+    const skelId = e.target.getAttribute('data-skelid');
+    if (skelId) {
+      const skeleton = document.getElementById(skelId);
+      if (skeleton) {
+        skeleton.innerHTML = `<div class="img-skeleton-unavailable"><i class="bi bi-image" aria-hidden="true"></i><p>Image unavailable</p></div>`;
+        skeleton.classList.remove('img-skeleton');
+      }
+    }
+    e.target.style.display = 'none';
+  }
+}
+
 function saveCart() {
   localStorage.setItem('luxe_cart', JSON.stringify(cart));
 }
@@ -196,7 +222,8 @@ function renderProducts(list) {
           <a href="product.html?id=${p.id}" class="product-link">
             <div class="product-img-wrap">
               ${badgeHtml}
-              <img src="${p.img}" alt="${p.name}" loading="lazy">
+              <div class="img-skeleton" id="skel-${p.id}"></div>
+              <img src="${p.img}" alt="${p.name}" loading="lazy" class="product-card-img" data-skelid="skel-${p.id}">
             </div>
           </a>
           <div class="product-actions">
@@ -214,6 +241,13 @@ function renderProducts(list) {
         </div>
       </div>`;
   });
+
+  // Setup image load/error event handlers using event delegation
+  const productsGrid = document.getElementById('productsGrid');
+  if (productsGrid) {
+    productsGrid.addEventListener('load', handleImageLoad, true);
+    productsGrid.addEventListener('error', handleImageError, true);
+  }
 }
 
 function appendProducts(list) {
@@ -229,7 +263,8 @@ function appendProducts(list) {
           <a href="product.html?id=${p.id}" class="product-link">
             <div class="product-img-wrap">
               ${badgeHtml}
-              <img src="${p.img}" alt="${p.name}" loading="lazy">
+              <div class="img-skeleton" id="skel-${p.id}"></div>
+              <img src="${p.img}" alt="${p.name}" loading="lazy" class="product-card-img" data-skelid="skel-${p.id}">
             </div>
           </a>
           <div class="product-actions">
@@ -247,6 +282,13 @@ function appendProducts(list) {
         </div>
       </div>`;
   });
+
+  // Setup image load/error event handlers using event delegation
+  const productsGrid = document.getElementById('productsGrid');
+  if (productsGrid) {
+    productsGrid.addEventListener('load', handleImageLoad, true);
+    productsGrid.addEventListener('error', handleImageError, true);
+  }
 }
 
 let currentCategoryFilter = 'all';
@@ -503,7 +545,8 @@ function renderWishlist() {
         <div class="product-card">
           <a href="product.html?id=${p.id}" class="product-link-block">
             <div class="product-img-wrap">
-              <img src="${p.img}" alt="${p.name}" loading="lazy">
+              <div class="img-skeleton" id="skel-${p.id}"></div>
+              <img src="${p.img}" alt="${p.name}" loading="lazy" class="product-card-img" data-skelid="skel-${p.id}">
             </div>
           </a>
           <div class="product-actions">
@@ -521,6 +564,13 @@ function renderWishlist() {
         </div>
       </div>`;
   });
+
+  // Setup image load/error event handlers using event delegation
+  const wishlistGrid = document.getElementById('wishlistGrid');
+  if (wishlistGrid) {
+    wishlistGrid.addEventListener('load', handleImageLoad, true);
+    wishlistGrid.addEventListener('error', handleImageError, true);
+  }
 }
 
 function renderCheckout() {
@@ -564,6 +614,32 @@ function renderCheckout() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ========================================
+  // PAGE LOADER
+  // ========================================
+  const pageLoader = document.getElementById('pageLoader');
+  const loaderBar = document.getElementById('loaderBar');
+  
+  // Helper function to dismiss the loader
+  window.dismissPageLoader = function() {
+    if (pageLoader) {
+      pageLoader.classList.add('hidden');
+    }
+  };
+  
+  if (pageLoader && loaderBar) {
+    loaderBar.classList.add('complete');
+    
+    // For product.html, the loader will be dismissed by the product rendering code
+    // For all other pages, dismiss after 900ms
+    const isProductPage = window.location.pathname.toLowerCase().includes('product.html');
+    if (!isProductPage) {
+      setTimeout(() => {
+        dismissPageLoader();
+      }, 900);
+    }
+  }
+
   // Extract page category from URL
   const path = window.location.pathname.toLowerCase();
   let defaultCategory = 'all';
@@ -1758,6 +1834,78 @@ document.addEventListener('DOMContentLoaded', () => {
           resetButton(submitBtn, 'Resend Link');
         }, 5000);
       }, 1000);
+    });
+  }
+
+  // ========================================
+  // BACK TO TOP BUTTON
+  // ========================================
+  const backToTopButton = document.getElementById('backToTop');
+  if (backToTopButton) {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        backToTopButton.classList.add('visible');
+      } else {
+        backToTopButton.classList.remove('visible');
+      }
+      ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleScroll);
+        ticking = true;
+        setTimeout(() => {
+          ticking = false;
+        }, 100);
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // ========================================
+  // STICKY ADD-TO-BAG BAR SCROLL BEHAVIOR
+  // ========================================
+  if (document.getElementById('stickyATB')) {
+    const stickyBar = document.getElementById('stickyATB');
+    const productDetails = document.getElementById('productDetails');
+    let ticking = false;
+
+    const handleStickyBarScroll = () => {
+      if (productDetails) {
+        const rect = productDetails.getBoundingClientRect();
+        const isScrolledPast = rect.bottom < 0;
+
+        if (isScrolledPast) {
+          stickyBar.classList.add('visible');
+          // Adjust back-to-top button position to avoid overlap
+          if (backToTopButton) {
+            backToTopButton.style.bottom = 'calc(64px + 32px)';
+          }
+        } else {
+          stickyBar.classList.remove('visible');
+          // Restore back-to-top button to normal position
+          if (backToTopButton) {
+            backToTopButton.style.bottom = '32px';
+          }
+        }
+      }
+      ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleStickyBarScroll);
+        ticking = true;
+        setTimeout(() => {
+          ticking = false;
+        }, 100);
+      }
     });
   }
 
