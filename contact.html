@@ -120,23 +120,23 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label for="contactName" class="visually-hidden">Name</label>
-                <input type="text" class="form-control" id="contactName" pattern="[A-Za-z\s]+"
-                  oninput="this.setCustomValidity('')"
-                  oninvalid="this.setCustomValidity('Please enter alphabets only. Numbers are not allowed.')"
-                  placeholder="Your Name" required minlength="2">
+                <input type="text" class="form-control" id="contactName" placeholder="Your Name">
+                <span class="field-error"></span>
               </div>
               <div class="col-md-6">
                 <label for="contactEmail" class="visually-hidden">Email</label>
-                <input type="email" class="form-control" id="contactEmail" placeholder="Your Email" required>
+                <input type="email" class="form-control" id="contactEmail" placeholder="Your Email">
+                <span class="field-error"></span>
               </div>
               <div class="col-12">
                 <label for="contactSubject" class="visually-hidden">Subject</label>
-                <input type="text" class="form-control" id="contactSubject" placeholder="Subject" required>
+                <input type="text" class="form-control" id="contactSubject" placeholder="Subject">
+                <span class="field-error"></span>
               </div>
               <div class="col-12">
                 <label for="contactMessage" class="visually-hidden">Message</label>
-                <textarea class="form-control" id="contactMessage" rows="5" placeholder="Your Message" required
-                  minlength="10"></textarea>
+                <textarea class="form-control" id="contactMessage" rows="5" placeholder="Your Message"></textarea>
+                <span class="field-error"></span>
               </div>
               <div class="col-12">
                 <button type="submit" class="btn-submit">Send Message</button>
@@ -158,9 +158,10 @@
       <form class="newsletter-form mx-auto" id="newsletterForm" method="POST">
         <label for="newsletterEmail" class="visually-hidden">Email address for newsletter</label>
         <input type="email" id="newsletterEmail" placeholder="Your email address"
-          aria-label="Email address for newsletter" required>
+          aria-label="Email address for newsletter">
         <button type="submit">Subscribe</button>
       </form>
+      <span class="field-error" style="max-width: 520px; margin: 0 auto; text-align: center;"></span>
       <div id="newsletterMsg" class="newsletter-msg"></div>
       <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
     </div>

@@ -3,6 +3,146 @@
    script.js
    ========================================= */
 
+// ========================================
+// VALIDATION UTILITY FUNCTIONS
+// ========================================
+
+const disposableDomains = ['mailinator.com', 'guerrillamail.com', 'tempmail.com', 'throwaway.email', 'yopmail.com'];
+
+function isValidEmail(val) {
+  const trimmed = val.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
+  const domain = trimmed.split('@')[1].toLowerCase();
+  return !disposableDomains.includes(domain);
+}
+
+function isNameOnly(val) {
+  const trimmed = val.trim();
+  if (!trimmed) return false;
+  return /^[A-Za-z\s\-']+$/.test(trimmed) && !/\d/.test(trimmed);
+}
+
+function isDigitsOnly(val) {
+  const trimmed = val.trim();
+  return /^\d+$/.test(trimmed);
+}
+
+function hasNoDigits(val) {
+  return !/\d/.test(val);
+}
+
+function isAlphanumeric(val) {
+  const trimmed = val.trim();
+  return /^[A-Za-z0-9]+$/.test(trimmed);
+}
+
+function isValidPakistaniPostal(val) {
+  const trimmed = val.trim();
+  return /^\d{5}$/.test(trimmed);
+}
+
+function isValidCardNumber(val) {
+  const stripped = val.replace(/\s/g, '');
+  if (!/^\d{16}$/.test(stripped)) return false;
+
+  // Luhn algorithm
+  let sum = 0;
+  let isEven = false;
+  for (let i = stripped.length - 1; i >= 0; i--) {
+    let digit = parseInt(stripped[i], 10);
+    if (isEven) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+    sum += digit;
+    isEven = !isEven;
+  }
+  return sum % 10 === 0;
+}
+
+function isValidExpiry(val) {
+  const cleaned = val.replace(/\s/g, '').replace(/\//g, '');
+  if (!/^\d{4}$/.test(cleaned)) return false;
+
+  const month = parseInt(cleaned.substring(0, 2), 10);
+  const year = parseInt(cleaned.substring(2, 4), 10);
+
+  if (month < 1 || month > 12) return false;
+
+  const now = new Date();
+  const currentYear = now.getFullYear() % 100;
+  const currentMonth = now.getMonth() + 1;
+
+  if (year < currentYear) return false;
+  if (year === currentYear && month < currentMonth) return false;
+
+  return true;
+}
+
+function isValidCVV(val) {
+  const trimmed = val.trim();
+  return /^\d{3,4}$/.test(trimmed);
+}
+
+function sanitizeInput(str) {
+  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function showFieldError(inputEl, message) {
+  inputEl.classList.add('field-invalid');
+  inputEl.classList.remove('field-success');
+
+  let errorSpan = inputEl.nextElementSibling;
+  if (inputEl.parentElement.classList.contains('input-wrapper')) {
+    errorSpan = inputEl.parentElement.nextElementSibling;
+  }
+
+  if (errorSpan && errorSpan.classList.contains('field-error')) {
+    errorSpan.textContent = message;
+  }
+}
+
+function showFieldSuccess(inputEl) {
+  inputEl.classList.remove('field-invalid');
+  inputEl.classList.add('field-success');
+
+  let errorSpan = inputEl.nextElementSibling;
+  if (inputEl.parentElement.classList.contains('input-wrapper')) {
+    errorSpan = inputEl.parentElement.nextElementSibling;
+  }
+
+  if (errorSpan && errorSpan.classList.contains('field-error')) {
+    errorSpan.textContent = '';
+  }
+}
+
+function clearFieldState(inputEl) {
+  inputEl.classList.remove('field-invalid', 'field-success');
+
+  let errorSpan = inputEl.nextElementSibling;
+  if (inputEl.parentElement.classList.contains('input-wrapper')) {
+    errorSpan = inputEl.parentElement.nextElementSibling;
+  }
+
+  if (errorSpan && errorSpan.classList.contains('field-error')) {
+    errorSpan.textContent = '';
+  }
+}
+
+function setButtonLoading(btnEl, text) {
+  btnEl.disabled = true;
+  btnEl.textContent = text;
+}
+
+function resetButton(btnEl, text) {
+  btnEl.disabled = false;
+  btnEl.textContent = text;
+}
+
+// ========================================
+// PRODUCTS DATA
+// ========================================
+
 const products = [
   { id:1, name:"Silk Drape Midi Dress", cat:"Women", price:8500, oldPrice:null, badge:"new", rating:5, reviews:24, img:"assets/Silk Drape Midi Dress.jpg", category:"women" },
   { id:2, name:"Structured Blazer", cat:"Men", price:12000, oldPrice:16000, badge:"sale", rating:4, reviews:18, img:"assets/Structured Blazer.jpg", category:"men" },
@@ -466,47 +606,118 @@ document.addEventListener('DOMContentLoaded', () => {
     orderNumberEl.textContent = orderNum;
   }
 
+  // ========================================
+  // SEARCH INPUT VALIDATION
+  // ========================================
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const query = e.target.value.trim();
-        if (query.length < 3) {
-          showToast('Please enter at least 3 characters to search.');
-        } else {
-          // Filter products based on search query
-          const results = products.filter(p =>
-            p.name.toLowerCase().includes(query.toLowerCase()) ||
-            p.cat.toLowerCase().includes(query.toLowerCase())
-          );
 
-          // Store query and results in sessionStorage
-          sessionStorage.setItem('luxe_search_query', query);
-          sessionStorage.setItem('luxe_search_results', JSON.stringify(results));
-
-          // Redirect to search page
-          window.location.href = 'search.html';
+        // Validate search input
+        if (!query || /^\s+$/.test(e.target.value)) {
+          showToast('Please enter a search term.');
+          return;
         }
+        if (query.length < 2) {
+          showToast('Search term must be at least 2 characters.');
+          return;
+        }
+        if (query.length > 100) {
+          showToast('Search term is too long (max 100 characters).');
+          return;
+        }
+        if (isDigitsOnly(query)) {
+          showToast('Please enter a product name or category to search.');
+          return;
+        }
+
+        // Sanitize input
+        const sanitized = sanitizeInput(query);
+
+        // Filter products based on search query
+        const results = products.filter(p =>
+          p.name.toLowerCase().includes(sanitized.toLowerCase()) ||
+          p.cat.toLowerCase().includes(sanitized.toLowerCase())
+        );
+
+        // Store query and results in sessionStorage
+        sessionStorage.setItem('luxe_search_query', sanitized);
+        sessionStorage.setItem('luxe_search_results', JSON.stringify(results));
+
+        // Redirect to search page
+        window.location.href = 'search.html';
       }
     });
   }
 
+  // ========================================
+  // NEWSLETTER FORM VALIDATION
+  // ========================================
   const newsletterForm = document.getElementById('newsletterForm');
   if (newsletterForm) {
+    const emailInput = document.getElementById('newsletterEmail');
+    const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+    const msgDiv = document.getElementById('newsletterMsg');
+
+    const validateNewsletterEmail = () => {
+      const val = emailInput.value.trim();
+
+      if (!val) {
+        showFieldError(emailInput, 'Email address is required.');
+        return false;
+      }
+      if (/^\s+$/.test(emailInput.value)) {
+        showFieldError(emailInput, 'Please enter a real email address.');
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address (e.g. name@example.com).');
+        return false;
+      }
+      if (!isValidEmail(val)) {
+        showFieldError(emailInput, 'Disposable email addresses are not accepted.');
+        return false;
+      }
+      if (/^\d+@/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address.');
+        return false;
+      }
+
+      showFieldSuccess(emailInput);
+      return true;
+    };
+
+    emailInput.addEventListener('blur', validateNewsletterEmail);
+    emailInput.addEventListener('input', () => {
+      if (emailInput.classList.contains('field-invalid')) {
+        clearFieldState(emailInput);
+      }
+    });
+
     newsletterForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const emailInput = document.getElementById('newsletterEmail');
-      const msgDiv = document.getElementById('newsletterMsg');
-      const email = emailInput.value.trim();
-      
-      if (!email) {
-        if (msgDiv) { msgDiv.textContent = 'Please enter an email address.'; msgDiv.style.color = '#e74c3c'; }
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        if (msgDiv) { msgDiv.textContent = 'Please enter a valid email address.'; msgDiv.style.color = '#e74c3c'; }
-      } else {
-        if (msgDiv) { msgDiv.textContent = 'Successfully subscribed to the LUXE Circle!'; msgDiv.style.color = '#C9A96E'; }
-        emailInput.value = '';
-        showToast('Subscribed successfully!');
+
+      if (!validateNewsletterEmail()) {
+        return;
+      }
+
+      // Success
+      if (msgDiv) {
+        msgDiv.textContent = "You're on the list! Welcome to the LUXE Circle.";
+        msgDiv.style.color = '#C9A96E';
+      }
+      showToast('Subscribed successfully!');
+      emailInput.value = '';
+      clearFieldState(emailInput);
+
+      // Disable button for 3 seconds
+      if (submitBtn) {
+        setButtonLoading(submitBtn, 'Subscribed');
+        setTimeout(() => {
+          resetButton(submitBtn, 'Subscribe');
+        }, 3000);
       }
     });
   }
@@ -583,34 +794,359 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Contact Form Validation
+  // ========================================
+  // CONTACT FORM VALIDATION
+  // ========================================
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
+    const nameInput = document.getElementById('contactName');
+    const emailInput = document.getElementById('contactEmail');
+    const subjectInput = document.getElementById('contactSubject');
+    const messageInput = document.getElementById('contactMessage');
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+    // Name validation
+    const validateName = () => {
+      const val = nameInput.value.trim();
+
+      if (!val) {
+        showFieldError(nameInput, 'Name is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(nameInput, 'Name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(nameInput, 'Name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(nameInput, 'Name must be at least 2 characters.');
+        return false;
+      }
+      if (val.length > 60) {
+        showFieldError(nameInput, 'Name cannot exceed 60 characters.');
+        return false;
+      }
+      if (!isNameOnly(val)) {
+        showFieldError(nameInput, 'Name cannot contain special characters.');
+        return false;
+      }
+
+      showFieldSuccess(nameInput);
+      return true;
+    };
+
+    // Email validation
+    const validateContactEmail = () => {
+      const val = emailInput.value.trim();
+
+      if (!val) {
+        showFieldError(emailInput, 'Email address is required.');
+        return false;
+      }
+      if (/\s/.test(emailInput.value)) {
+        showFieldError(emailInput, 'Email address cannot contain spaces.');
+        return false;
+      }
+      if (!val.includes('@')) {
+        showFieldError(emailInput, "Please include an '@' in the email address.");
+        return false;
+      }
+      const atIndex = val.indexOf('@');
+      if (atIndex === val.length - 1 || val.substring(atIndex + 1).indexOf('.') === -1) {
+        showFieldError(emailInput, 'Please enter a complete email address.');
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email (e.g. name@example.com).');
+        return false;
+      }
+      if (!isValidEmail(val)) {
+        showFieldError(emailInput, 'Please use a permanent email address.');
+        return false;
+      }
+
+      showFieldSuccess(emailInput);
+      return true;
+    };
+
+    // Subject validation
+    const validateSubject = () => {
+      const val = subjectInput.value.trim();
+
+      if (!val) {
+        showFieldError(subjectInput, 'Subject is required.');
+        return false;
+      }
+      if (val.length < 3) {
+        showFieldError(subjectInput, 'Subject must be at least 3 characters.');
+        return false;
+      }
+      if (val.length > 100) {
+        showFieldError(subjectInput, 'Subject cannot exceed 100 characters.');
+        return false;
+      }
+      if (isDigitsOnly(val)) {
+        showFieldError(subjectInput, 'Subject must contain meaningful text.');
+        return false;
+      }
+      if (/^\s+$/.test(subjectInput.value)) {
+        showFieldError(subjectInput, 'Subject cannot be blank spaces.');
+        return false;
+      }
+
+      showFieldSuccess(subjectInput);
+      return true;
+    };
+
+    // Message validation
+    const validateMessage = () => {
+      const val = messageInput.value.trim();
+
+      if (!val) {
+        showFieldError(messageInput, 'Message is required.');
+        return false;
+      }
+      if (val.length < 20) {
+        showFieldError(messageInput, 'Message is too short. Please provide more detail (min 20 characters).');
+        return false;
+      }
+      if (val.length > 1000) {
+        showFieldError(messageInput, 'Message is too long. Maximum 1000 characters allowed.');
+        return false;
+      }
+      if (isDigitsOnly(val)) {
+        showFieldError(messageInput, 'Please write a meaningful message.');
+        return false;
+      }
+      // Check for repeated characters (e.g., "aaaaaaaaaa")
+      if (/^(.)\1{9,}$/.test(val)) {
+        showFieldError(messageInput, 'Please write a meaningful message.');
+        return false;
+      }
+
+      showFieldSuccess(messageInput);
+      return true;
+    };
+
+    // Character counter for message
+    const updateCharCounter = () => {
+      let counterEl = messageInput.parentElement.querySelector('.char-counter');
+      if (!counterEl) {
+        counterEl = document.createElement('div');
+        counterEl.className = 'char-counter';
+        messageInput.parentElement.appendChild(counterEl);
+      }
+
+      const length = messageInput.value.length;
+      counterEl.textContent = `${length} / 1000`;
+
+      if (length > 900) {
+        counterEl.classList.add('danger');
+      } else {
+        counterEl.classList.remove('danger');
+      }
+    };
+
+    // Attach blur and input listeners
+    nameInput.addEventListener('blur', validateName);
+    nameInput.addEventListener('input', () => {
+      if (nameInput.classList.contains('field-invalid')) clearFieldState(nameInput);
+    });
+
+    emailInput.addEventListener('blur', validateContactEmail);
+    emailInput.addEventListener('input', () => {
+      if (emailInput.classList.contains('field-invalid')) clearFieldState(emailInput);
+    });
+
+    subjectInput.addEventListener('blur', validateSubject);
+    subjectInput.addEventListener('input', () => {
+      if (subjectInput.classList.contains('field-invalid')) clearFieldState(subjectInput);
+    });
+
+    messageInput.addEventListener('blur', validateMessage);
+    messageInput.addEventListener('input', () => {
+      updateCharCounter();
+      if (messageInput.classList.contains('field-invalid')) clearFieldState(messageInput);
+    });
+
+    // Initialize character counter
+    updateCharCounter();
+
+    // Form submission
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('contactName').value.trim();
-      const email = document.getElementById('contactEmail').value.trim();
-      const subject = document.getElementById('contactSubject').value.trim();
-      const message = document.getElementById('contactMessage').value.trim();
 
-      if (!name || !email || !subject || !message) {
-        showToast('Please fill in all required fields.');
+      // Validate all fields in order
+      const isNameValid = validateName();
+      if (!isNameValid) {
+        nameInput.focus();
         return;
       }
 
-      // Simulate sending
-      showToast('Thank you! Your message has been sent successfully.');
-      contactForm.reset();
+      const isEmailValid = validateContactEmail();
+      if (!isEmailValid) {
+        emailInput.focus();
+        return;
+      }
+
+      const isSubjectValid = validateSubject();
+      if (!isSubjectValid) {
+        subjectInput.focus();
+        return;
+      }
+
+      const isMessageValid = validateMessage();
+      if (!isMessageValid) {
+        messageInput.focus();
+        return;
+      }
+
+      // All valid - submit
+      if (submitBtn) setButtonLoading(submitBtn, 'Sending...');
+
+      setTimeout(() => {
+        showToast("Thank you! We'll be in touch within 24 hours.");
+        contactForm.reset();
+        clearFieldState(nameInput);
+        clearFieldState(emailInput);
+        clearFieldState(subjectInput);
+        clearFieldState(messageInput);
+        updateCharCounter();
+
+        if (submitBtn) resetButton(submitBtn, 'Send Message');
+      }, 1000);
     });
   }
 
-  // Login Form Handler
+  // ========================================
+  // PASSWORD VISIBILITY TOGGLE
+  // ========================================
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+
+  if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+
+      // Toggle icon
+      if (type === 'text') {
+        togglePassword.classList.remove('bi-eye');
+        togglePassword.classList.add('bi-eye-slash');
+      } else {
+        togglePassword.classList.remove('bi-eye-slash');
+        togglePassword.classList.add('bi-eye');
+      }
+    });
+  }
+
+  // ========================================
+  // LOGIN FORM VALIDATION
+  // ========================================
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+
+    // Email validation
+    const validateLoginEmail = () => {
+      const val = emailInput.value.trim();
+
+      if (!val) {
+        showFieldError(emailInput, 'Email address is required.');
+        return false;
+      }
+      if (/\s/.test(emailInput.value)) {
+        showFieldError(emailInput, 'Email address cannot contain spaces.');
+        return false;
+      }
+      if (!val.includes('@')) {
+        showFieldError(emailInput, "Please include '@' in your email.");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address.');
+        return false;
+      }
+
+      showFieldSuccess(emailInput);
+      return true;
+    };
+
+    // Password validation
+    const validatePassword = () => {
+      const val = passwordInput.value;
+
+      if (!val) {
+        showFieldError(passwordInput, 'Password is required.');
+        return false;
+      }
+      if (val.length < 8) {
+        showFieldError(passwordInput, 'Password must be at least 8 characters.');
+        return false;
+      }
+      if (isDigitsOnly(val)) {
+        showFieldError(passwordInput, 'Password cannot be numbers only.');
+        return false;
+      }
+      if (!/\d/.test(val) && /^[A-Za-z]+$/.test(val)) {
+        showFieldError(passwordInput, 'Password must include at least one number.');
+        return false;
+      }
+
+      showFieldSuccess(passwordInput);
+      return true;
+    };
+
+    // Attach listeners
+    emailInput.addEventListener('blur', validateLoginEmail);
+    emailInput.addEventListener('input', () => {
+      if (emailInput.classList.contains('field-invalid')) clearFieldState(emailInput);
+    });
+
+    passwordInput.addEventListener('blur', validatePassword);
+    passwordInput.addEventListener('input', () => {
+      if (passwordInput.classList.contains('field-invalid')) clearFieldState(passwordInput);
+    });
+
+    // Form submission
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showToast('Successfully signed in. Redirecting...');
-      setTimeout(() => window.location.href = 'index.html', 1500);
+
+      const isEmailValid = validateLoginEmail();
+      if (!isEmailValid) {
+        emailInput.focus();
+        return;
+      }
+
+      const isPasswordValid = validatePassword();
+      if (!isPasswordValid) {
+        passwordInput.focus();
+        return;
+      }
+
+      // Simulate authentication
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (submitBtn) setButtonLoading(submitBtn, 'Signing In...');
+
+      setTimeout(() => {
+        if (email === 'admin@luxe.pk' && password === 'luxe2024') {
+          showToast('Welcome back! Redirecting...');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          showFieldError(passwordInput, 'Invalid email or password.');
+          showToast('Login failed. Please check your credentials.');
+          if (submitBtn) resetButton(submitBtn, 'Sign In');
+        }
+      }, 800);
     });
   }
 
@@ -642,40 +1178,383 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Checkout Form Submission
+  // ========================================
+  // CHECKOUT FORM VALIDATION
+  // ========================================
   const checkoutForm = document.getElementById('checkoutForm');
   if (checkoutForm) {
-    // Payment Method Toggle
+    const emailInput = checkoutForm.querySelector('#email');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const addressInput = document.getElementById('address');
+    const cityInput = document.getElementById('city');
+    const stateInput = document.getElementById('state');
+    const zipInput = document.getElementById('zip');
+
     const creditCardRadio = document.getElementById('creditCard');
     const codRadio = document.getElementById('cod');
     const creditCardForm = document.getElementById('creditCardForm');
-
-    if (creditCardRadio && codRadio && creditCardForm) {
-      // Toggle credit card form visibility based on payment method
-      creditCardRadio.addEventListener('change', () => {
-        if (creditCardRadio.checked) {
-          creditCardForm.classList.remove('d-none');
-        }
-      });
-
-      codRadio.addEventListener('change', () => {
-        if (codRadio.checked) {
-          creditCardForm.classList.add('d-none');
-        }
-      });
-    }
-
-    // Credit Card Input Formatting
+    const cardholderNameInput = document.getElementById('cardholderName');
     const cardNumberInput = document.getElementById('cardNumber');
     const expiryDateInput = document.getElementById('expiryDate');
     const cvvInput = document.getElementById('cvv');
 
-    // Format card number with spaces (XXXX XXXX XXXX XXXX)
+    // Email validation
+    const validateCheckoutEmail = () => {
+      const val = emailInput.value.trim();
+
+      if (!val) {
+        showFieldError(emailInput, 'Email address is required.');
+        return false;
+      }
+      if (/\s/.test(emailInput.value)) {
+        showFieldError(emailInput, 'Email address cannot contain spaces.');
+        return false;
+      }
+      if (!val.includes('@')) {
+        showFieldError(emailInput, "Please include '@' in your email.");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address.');
+        return false;
+      }
+
+      showFieldSuccess(emailInput);
+      return true;
+    };
+
+    // First name validation
+    const validateFirstName = () => {
+      const val = firstNameInput.value.trim();
+
+      if (!val) {
+        showFieldError(firstNameInput, 'First name is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(firstNameInput, 'First name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(firstNameInput, 'First name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(firstNameInput, 'First name must be at least 2 characters.');
+        return false;
+      }
+      if (val.length > 40) {
+        showFieldError(firstNameInput, 'First name cannot exceed 40 characters.');
+        return false;
+      }
+
+      showFieldSuccess(firstNameInput);
+      return true;
+    };
+
+    // Last name validation
+    const validateLastName = () => {
+      const val = lastNameInput.value.trim();
+
+      if (!val) {
+        showFieldError(lastNameInput, 'Last name is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(lastNameInput, 'Last name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(lastNameInput, 'Last name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(lastNameInput, 'Last name must be at least 2 characters.');
+        return false;
+      }
+      if (val.length > 40) {
+        showFieldError(lastNameInput, 'Last name cannot exceed 40 characters.');
+        return false;
+      }
+
+      showFieldSuccess(lastNameInput);
+      return true;
+    };
+
+    // Address validation
+    const validateAddress = () => {
+      const val = addressInput.value.trim();
+
+      if (!val) {
+        showFieldError(addressInput, 'Delivery address is required.');
+        return false;
+      }
+      if (val.length < 10) {
+        showFieldError(addressInput, 'Please enter your full address (min 10 characters).');
+        return false;
+      }
+      if (isDigitsOnly(val)) {
+        showFieldError(addressInput, 'Please enter a valid address including street name.');
+        return false;
+      }
+      if (val.length > 200) {
+        showFieldError(addressInput, 'Address is too long.');
+        return false;
+      }
+
+      showFieldSuccess(addressInput);
+      return true;
+    };
+
+    // City validation
+    const validateCity = () => {
+      const val = cityInput.value.trim();
+
+      if (!val) {
+        showFieldError(cityInput, 'City is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(cityInput, 'City name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(cityInput, 'City name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(cityInput, 'Please enter a valid city name.');
+        return false;
+      }
+
+      showFieldSuccess(cityInput);
+      return true;
+    };
+
+    // State validation (optional field)
+    const validateState = () => {
+      const val = stateInput.value.trim();
+
+      if (!val) {
+        clearFieldState(stateInput);
+        return true; // Optional field
+      }
+
+      if (/\d/.test(val)) {
+        showFieldError(stateInput, 'Province/state name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(stateInput, 'Province/state name cannot contain special characters.');
+        return false;
+      }
+
+      showFieldSuccess(stateInput);
+      return true;
+    };
+
+    // Zip validation
+    const validateZip = () => {
+      const val = zipInput.value.trim();
+
+      if (!val) {
+        showFieldError(zipInput, 'Postal code is required.');
+        return false;
+      }
+      if (/[A-Za-z]/.test(val)) {
+        showFieldError(zipInput, 'Postal code must contain numbers only.');
+        return false;
+      }
+      if (/[\s@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(zipInput, 'Postal code cannot contain spaces or symbols.');
+        return false;
+      }
+      if (!isValidPakistaniPostal(val)) {
+        showFieldError(zipInput, 'Please enter a valid 5-digit Pakistani postal code.');
+        return false;
+      }
+
+      showFieldSuccess(zipInput);
+      return true;
+    };
+
+    // Cardholder name validation
+    const validateCardholderName = () => {
+      if (codRadio && codRadio.checked) return true; // Skip if COD selected
+
+      const val = cardholderNameInput.value.trim();
+
+      if (!val) {
+        showFieldError(cardholderNameInput, 'Cardholder name is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(cardholderNameInput, 'Cardholder name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(cardholderNameInput, 'Cardholder name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(cardholderNameInput, 'Please enter the full name on your card.');
+        return false;
+      }
+
+      showFieldSuccess(cardholderNameInput);
+      return true;
+    };
+
+    // Card number validation
+    const validateCardNumber = () => {
+      if (codRadio && codRadio.checked) return true; // Skip if COD selected
+
+      const val = cardNumberInput.value;
+
+      if (!val.trim()) {
+        showFieldError(cardNumberInput, 'Card number is required.');
+        return false;
+      }
+
+      const stripped = val.replace(/\s/g, '');
+
+      if (/[A-Za-z]/.test(stripped)) {
+        showFieldError(cardNumberInput, 'Card number must contain numbers only.');
+        return false;
+      }
+      if (/[^0-9\s]/.test(val)) {
+        showFieldError(cardNumberInput, 'Card number cannot contain special characters.');
+        return false;
+      }
+      if (stripped.length !== 16) {
+        showFieldError(cardNumberInput, 'Card number must be exactly 16 digits.');
+        return false;
+      }
+      if (!isValidCardNumber(val)) {
+        showFieldError(cardNumberInput, 'Please enter a valid card number.');
+        return false;
+      }
+
+      showFieldSuccess(cardNumberInput);
+      return true;
+    };
+
+    // Expiry date validation
+    const validateExpiryDate = () => {
+      if (codRadio && codRadio.checked) return true; // Skip if COD selected
+
+      const val = expiryDateInput.value;
+
+      if (!val.trim()) {
+        showFieldError(expiryDateInput, 'Expiry date is required.');
+        return false;
+      }
+      if (/[A-Za-z]/.test(val)) {
+        showFieldError(expiryDateInput, 'Expiry date must be in MM / YY format.');
+        return false;
+      }
+
+      const cleaned = val.replace(/\s/g, '').replace(/\//g, '');
+      if (!/^\d{4}$/.test(cleaned)) {
+        showFieldError(expiryDateInput, 'Please use MM / YY format.');
+        return false;
+      }
+
+      const month = parseInt(cleaned.substring(0, 2), 10);
+      if (month < 1 || month > 12) {
+        showFieldError(expiryDateInput, 'Month must be between 01 and 12.');
+        return false;
+      }
+
+      if (!isValidExpiry(val)) {
+        showFieldError(expiryDateInput, 'Your card has expired.');
+        return false;
+      }
+
+      showFieldSuccess(expiryDateInput);
+      return true;
+    };
+
+    // CVV validation
+    const validateCVV = () => {
+      if (codRadio && codRadio.checked) return true; // Skip if COD selected
+
+      const val = cvvInput.value.trim();
+
+      if (!val) {
+        showFieldError(cvvInput, 'CVV is required.');
+        return false;
+      }
+      if (/[A-Za-z]/.test(val)) {
+        showFieldError(cvvInput, 'CVV must contain numbers only.');
+        return false;
+      }
+      if (/[^0-9]/.test(val)) {
+        showFieldError(cvvInput, 'CVV cannot contain special characters.');
+        return false;
+      }
+      if (!isValidCVV(val)) {
+        showFieldError(cvvInput, 'CVV must be 3 or 4 digits.');
+        return false;
+      }
+
+      showFieldSuccess(cvvInput);
+      return true;
+    };
+
+    // Attach blur and input listeners
+    emailInput.addEventListener('blur', validateCheckoutEmail);
+    emailInput.addEventListener('input', () => {
+      if (emailInput.classList.contains('field-invalid')) clearFieldState(emailInput);
+    });
+
+    firstNameInput.addEventListener('blur', validateFirstName);
+    firstNameInput.addEventListener('input', () => {
+      if (firstNameInput.classList.contains('field-invalid')) clearFieldState(firstNameInput);
+    });
+
+    lastNameInput.addEventListener('blur', validateLastName);
+    lastNameInput.addEventListener('input', () => {
+      if (lastNameInput.classList.contains('field-invalid')) clearFieldState(lastNameInput);
+    });
+
+    addressInput.addEventListener('blur', validateAddress);
+    addressInput.addEventListener('input', () => {
+      if (addressInput.classList.contains('field-invalid')) clearFieldState(addressInput);
+    });
+
+    cityInput.addEventListener('blur', validateCity);
+    cityInput.addEventListener('input', () => {
+      if (cityInput.classList.contains('field-invalid')) clearFieldState(cityInput);
+    });
+
+    stateInput.addEventListener('blur', validateState);
+    stateInput.addEventListener('input', () => {
+      if (stateInput.classList.contains('field-invalid')) clearFieldState(stateInput);
+    });
+
+    zipInput.addEventListener('blur', validateZip);
+    zipInput.addEventListener('input', () => {
+      if (zipInput.classList.contains('field-invalid')) clearFieldState(zipInput);
+    });
+
+    if (cardholderNameInput) {
+      cardholderNameInput.addEventListener('blur', validateCardholderName);
+      cardholderNameInput.addEventListener('input', () => {
+        if (cardholderNameInput.classList.contains('field-invalid')) clearFieldState(cardholderNameInput);
+      });
+    }
+
     if (cardNumberInput) {
+      cardNumberInput.addEventListener('blur', validateCardNumber);
       cardNumberInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\s/g, ''); // Remove existing spaces
+        if (cardNumberInput.classList.contains('field-invalid')) clearFieldState(cardNumberInput);
+
+        // Auto-format card number with spaces
+        let value = e.target.value.replace(/\s/g, '');
         let formattedValue = '';
-        for (let i = 0; i < value.length; i++) {
+        for (let i = 0; i < value.length && i < 16; i++) {
           if (i > 0 && i % 4 === 0) {
             formattedValue += ' ';
           }
@@ -685,10 +1564,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Format expiry date (MM / YY)
     if (expiryDateInput) {
+      expiryDateInput.addEventListener('blur', validateExpiryDate);
       expiryDateInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\s/g, '').replace(/\//g, ''); // Remove spaces and slashes
+        if (expiryDateInput.classList.contains('field-invalid')) clearFieldState(expiryDateInput);
+
+        // Auto-format expiry date with /
+        let value = e.target.value.replace(/\s/g, '').replace(/\//g, '');
         if (value.length >= 2) {
           value = value.slice(0, 2) + ' / ' + value.slice(2, 4);
         }
@@ -696,69 +1578,188 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // CVV - only allow numeric input
     if (cvvInput) {
+      cvvInput.addEventListener('blur', validateCVV);
       cvvInput.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+        if (cvvInput.classList.contains('field-invalid')) clearFieldState(cvvInput);
+        // Only allow numeric input
+        e.target.value = e.target.value.replace(/\D/g, '');
+      });
+
+      // Show tooltip on focus
+      cvvInput.addEventListener('focus', () => {
+        let tooltip = cvvInput.parentElement.querySelector('.cvv-hint');
+        if (!tooltip) {
+          tooltip = document.createElement('div');
+          tooltip.className = 'cvv-hint';
+          tooltip.style.cssText = 'font-size: 11px; color: var(--muted); margin-top: 4px;';
+          tooltip.textContent = '3 digits on the back of your card (4 digits for Amex).';
+          cvvInput.parentElement.appendChild(tooltip);
+        }
+      });
+
+      cvvInput.addEventListener('blur', () => {
+        const tooltip = cvvInput.parentElement.querySelector('.cvv-hint');
+        if (tooltip && !cvvInput.classList.contains('field-invalid')) {
+          setTimeout(() => tooltip.remove(), 200);
+        }
       });
     }
 
-    // Form Submission with Validation
+    // Payment method toggle
+    if (creditCardRadio && codRadio && creditCardForm) {
+      creditCardRadio.addEventListener('change', () => {
+        if (creditCardRadio.checked) {
+          creditCardForm.style.display = 'block';
+        }
+      });
+
+      codRadio.addEventListener('change', () => {
+        if (codRadio.checked) {
+          creditCardForm.style.display = 'none';
+          // Clear card field errors when switching to COD
+          if (cardholderNameInput) clearFieldState(cardholderNameInput);
+          if (cardNumberInput) clearFieldState(cardNumberInput);
+          if (expiryDateInput) clearFieldState(expiryDateInput);
+          if (cvvInput) clearFieldState(cvvInput);
+        }
+      });
+    }
+
+    // Form submission
     checkoutForm.addEventListener('submit', (e) => {
       e.preventDefault();
+
       if (cart.length === 0) {
         showToast('Your cart is empty.');
         return;
       }
 
-      // Validate credit card fields if credit card is selected
-      if (creditCardRadio && creditCardRadio.checked) {
-        const cardholderName = document.getElementById('cardholderName');
-        const cardNumber = document.getElementById('cardNumber');
-        const expiryDate = document.getElementById('expiryDate');
-        const cvv = document.getElementById('cvv');
+      // Validate all fields in order
+      const validators = [
+        { fn: validateCheckoutEmail, el: emailInput },
+        { fn: validateFirstName, el: firstNameInput },
+        { fn: validateLastName, el: lastNameInput },
+        { fn: validateAddress, el: addressInput },
+        { fn: validateCity, el: cityInput },
+        { fn: validateState, el: stateInput },
+        { fn: validateZip, el: zipInput }
+      ];
 
-        if (!cardholderName.value.trim() || !cardNumber.value.trim() ||
-            !expiryDate.value.trim() || !cvv.value.trim()) {
-          showToast('Please complete your card details.');
+      // Add card validators if credit card is selected
+      if (creditCardRadio && creditCardRadio.checked) {
+        validators.push(
+          { fn: validateCardholderName, el: cardholderNameInput },
+          { fn: validateCardNumber, el: cardNumberInput },
+          { fn: validateExpiryDate, el: expiryDateInput },
+          { fn: validateCVV, el: cvvInput }
+        );
+      }
+
+      // Validate all fields
+      for (const validator of validators) {
+        if (!validator.fn()) {
+          validator.el.focus();
+          validator.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }
       }
 
-      showToast('Order placed successfully! Thank you for shopping with LUXE.');
-      cart = [];
-      currentDiscount = 0;
-      saveCart();
-      updateCart();
-      checkoutForm.reset();
+      // All valid - place order
+      const submitBtn = checkoutForm.querySelector('button[type="submit"]');
+      if (submitBtn) setButtonLoading(submitBtn, 'Processing...');
+
       setTimeout(() => {
-        window.location.href = 'order-confirmation.html';
-      }, 2000);
+        showToast('Order placed successfully! Thank you for shopping with LUXE.');
+        cart = [];
+        currentDiscount = 0;
+        saveCart();
+        updateCart();
+        setTimeout(() => {
+          window.location.href = 'order-confirmation.html';
+        }, 1500);
+      }, 1000);
     });
   }
 
-  // Forgot Password Form Submission
+  // ========================================
+  // FORGOT PASSWORD FORM VALIDATION
+  // ========================================
   const forgotPasswordForm = document.getElementById('forgotPasswordForm');
   if (forgotPasswordForm) {
+    const emailInput = forgotPasswordForm.querySelector('#email');
+    const submitBtn = forgotPasswordForm.querySelector('button[type="submit"]');
+
+    // Email validation
+    const validateForgotEmail = () => {
+      const val = emailInput.value.trim();
+
+      if (!val) {
+        showFieldError(emailInput, 'Email address is required.');
+        return false;
+      }
+      if (/\s/.test(emailInput.value)) {
+        showFieldError(emailInput, 'Email cannot contain spaces.');
+        return false;
+      }
+      if (!val.includes('@')) {
+        showFieldError(emailInput, "Please include '@' in your email.");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address.');
+        return false;
+      }
+      if (!isValidEmail(val)) {
+        showFieldError(emailInput, 'Please use a permanent email address.');
+        return false;
+      }
+      if (/^\d+@/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address.');
+        return false;
+      }
+
+      showFieldSuccess(emailInput);
+      return true;
+    };
+
+    emailInput.addEventListener('blur', validateForgotEmail);
+    emailInput.addEventListener('input', () => {
+      if (emailInput.classList.contains('field-invalid')) clearFieldState(emailInput);
+    });
+
     forgotPasswordForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const emailInput = document.getElementById('email');
-      const email = emailInput.value.trim();
-
-      // Email validation regex
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!email || !emailRegex.test(email)) {
-        showToast('Please enter a valid email address.');
+      if (!validateForgotEmail()) {
+        emailInput.focus();
         return;
       }
 
-      showToast('Password reset link sent! Please check your inbox.');
-      forgotPasswordForm.reset();
+      // Valid - send reset link
+      if (submitBtn) setButtonLoading(submitBtn, 'Sending Link...');
+
       setTimeout(() => {
-        window.location.href = 'account.html';
-      }, 2000);
+        const email = emailInput.value.trim();
+
+        // Create success message below form
+        let successMsg = forgotPasswordForm.querySelector('.success-message');
+        if (!successMsg) {
+          successMsg = document.createElement('p');
+          successMsg.className = 'success-message';
+          successMsg.style.cssText = 'color: #C9A96E; font-size: 14px; margin-top: 20px; text-align: center; line-height: 1.6;';
+          forgotPasswordForm.appendChild(successMsg);
+        }
+
+        successMsg.textContent = `A reset link has been sent to ${email}. Check your spam folder if you don't see it.`;
+        clearFieldState(emailInput);
+        emailInput.value = '';
+
+        // Re-enable button after 5 seconds with "Resend Link" text
+        setTimeout(() => {
+          resetButton(submitBtn, 'Resend Link');
+        }, 5000);
+      }, 1000);
     });
   }
 

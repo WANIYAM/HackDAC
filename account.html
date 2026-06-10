@@ -121,11 +121,16 @@
     <form class="contact-form" id="loginForm" action="#" method="POST">
       <div class="mb-3">
         <label for="email" class="form-label">Email Address *</label>
-        <input type="email" class="form-control" id="email" required>
+        <input type="email" class="form-control" id="email">
+        <span class="field-error"></span>
       </div>
       <div class="mb-4">
         <label for="password" class="form-label">Password *</label>
-        <input type="password" class="form-control" id="password" required>
+        <div class="input-wrapper">
+          <input type="password" class="form-control" id="password">
+          <i class="bi bi-eye input-icon-right" id="togglePassword"></i>
+        </div>
+        <span class="field-error"></span>
       </div>
       <button type="submit" class="btn btn-dark w-100 py-3" style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Sign In</button>
       <p class="text-center mt-3 mb-0" style="font-size: 13px; color: var(--muted);">

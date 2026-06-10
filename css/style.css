@@ -956,3 +956,42 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
   padding-top: 16px;
   margin-top: 16px;
 }
+
+/* FORM VALIDATION STYLES */
+.field-error {
+  display: block;
+  color: #e74c3c;
+  font-size: 12px;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+  min-height: 18px;
+}
+.field-success {
+  border-color: #27ae60 !important;
+}
+.field-invalid {
+  border-color: #e74c3c !important;
+}
+.input-wrapper {
+  position: relative;
+}
+.input-icon-right {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 16px;
+}
+.char-counter {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Outfit', sans-serif;
+  text-align: right;
+  margin-top: 4px;
+}
+.char-counter.danger {
+  color: #e74c3c;
+}
