@@ -92,7 +92,7 @@
 
 <!-- PAGE HERO -->
 <section class="page-hero">
-  <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1200&q=80')"></div>
+  <div class="page-hero-bg page-hero-bg-wishlist"></div>
   <div class="container-xl">
     <div class="section-label">Your Favorites</div>
     <h1 class="page-hero-title">Wishlist</h1>
@@ -110,16 +110,16 @@
 </div>
 
 <!-- WISHLIST SECTION -->
-<section class="py-5" style="min-height: 50vh;">
+<section class="py-5 section-min-height-50">
   <div class="container-xl">
     <div class="row g-4" id="wishlistGrid">
       <!-- Wishlist items rendered here -->
     </div>
     <div id="emptyWishlistMsg" class="text-center py-5 d-none">
-      <i class="bi bi-heart" style="font-size: 3rem; color: var(--border); margin-bottom: 1rem; display: block;"></i>
+      <i class="bi bi-heart wishlist-empty-icon"></i>
       <h3>Your wishlist is empty</h3>
       <p class="text-muted mb-4">Save items you love by clicking the heart icon.</p>
-      <a href="collections.html" class="btn btn-outline-dark px-4 py-2" style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Explore Collections</a>
+      <a href="collections.html" class="btn btn-outline-dark px-4 py-2 wishlist-explore-btn">Explore Collections</a>
     </div>
   </div>
 </section>

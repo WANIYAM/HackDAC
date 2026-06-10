@@ -80,13 +80,13 @@
 
       <!-- Product Image -->
       <div class="col-lg-6">
-        <img id="productImage" src="" alt="" style="width: 100%; aspect-ratio: 3/4; object-fit: cover;">
+        <img id="productImage" src="" alt="" class="product-detail-img">
       </div>
 
       <!-- Product Info -->
       <div class="col-lg-6">
         <div class="section-label" id="productCategory"></div>
-        <h1 id="productName" style="font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; margin-bottom: 16px;"></h1>
+        <h1 id="productName" class="product-detail-title"></h1>
 
         <!-- Rating -->
         <div class="product-rating mb-3" id="productRating"></div>
@@ -129,7 +129,7 @@
 
         <!-- Product Description -->
         <div>
-          <h5 style="font-weight: 500; margin-bottom: 12px;">Description</h5>
+          <h5 class="product-section-heading">Description</h5>
           <p class="about-text" id="productDescription"></p>
         </div>
       </div>
@@ -139,7 +139,7 @@
 </section>
 
 <!-- YOU MAY ALSO LIKE SECTION -->
-<section class="products-section" style="padding-top: 0;">
+<section class="products-section recommended-section">
   <div class="container-xl">
     <div class="section-label text-center">Recommended</div>
     <h2 class="section-title text-center">You May Also Like</h2>
@@ -158,7 +158,7 @@
       <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter">
       <button type="submit">Subscribe</button>
     </form>
-    <span class="field-error" style="max-width: 520px; margin: 0 auto; text-align: center;"></span>
+    <span class="field-error centered-content"></span>
     <div id="newsletterMsg" class="newsletter-msg"></div>
     <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
   </div>
@@ -333,21 +333,21 @@
     const reviews = product.reviews || Math.floor(Math.random() * 50) + 10;
     let ratingHTML = '';
     for (let i = 0; i < 5; i++) {
-      ratingHTML += i < rating ? '<i class="bi bi-star-fill" style="color: var(--gold);"></i>' : '<i class="bi bi-star" style="color: var(--gold);"></i>';
+      ratingHTML += i < rating ? '<i class="bi bi-star-fill product-star-icon"></i>' : '<i class="bi bi-star product-star-icon"></i>';
     }
     ratingHTML += ` <span class="text-muted ms-2">(${reviews} reviews)</span>`;
     document.getElementById('productRating').innerHTML = ratingHTML;
 
     // Price
-    let priceHTML = `<h3 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; margin: 0;">Rs. ${product.price.toLocaleString()}</h3>`;
+    let priceHTML = `<h3 class="product-detail-price">Rs. ${product.price.toLocaleString()}</h3>`;
     if (product.oldPrice) {
-      priceHTML += `<p class="text-muted" style="text-decoration: line-through; margin: 0;">Rs. ${product.oldPrice.toLocaleString()}</p>`;
+      priceHTML += `<p class="text-muted product-detail-old-price">Rs. ${product.oldPrice.toLocaleString()}</p>`;
     }
     document.getElementById('productPriceContainer').innerHTML = priceHTML;
 
     // Badge
     if (product.badge) {
-      document.getElementById('productBadge').innerHTML = `<span class="badge bg-dark" style="font-size: 12px; padding: 6px 12px;">${product.badge}</span>`;
+      document.getElementById('productBadge').innerHTML = `<span class="badge bg-dark product-detail-badge">${product.badge}</span>`;
     }
 
     // Size selection
@@ -425,7 +425,7 @@
       card.className = 'col-md-6 col-lg-3';
       card.innerHTML = `
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+          <a href="product.html?id=${p.id}" class="product-link">
             <div class="product-img-wrap">
               <img src="${p.img}" alt="${p.name}" class="product-img" loading="lazy">
               ${p.badge ? `<span class="product-badge badge-sale">${p.badge}</span>` : ''}
@@ -433,7 +433,7 @@
           </a>
           <div class="product-info">
             <div class="product-cat">${p.category}</div>
-            <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+            <a href="product.html?id=${p.id}" class="product-link">
               <div class="product-name">${p.name}</div>
             </a>
             <div class="product-price">

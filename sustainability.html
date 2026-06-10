@@ -64,7 +64,7 @@
 
 <!-- PAGE HERO -->
 <section class="page-hero">
-  <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1542601906897-eabf761d7e92?w=1200&q=80')"></div>
+  <div class="page-hero-bg page-hero-bg-sustainability"></div>
   <div class="container-xl">
     <div class="section-label">Our Commitment</div>
     <h1 class="page-hero-title">Sustainability</h1>
@@ -99,7 +99,7 @@
 </section>
 
 <!-- COMMITMENTS SECTION -->
-<section style="background: #fff; padding: 80px 0;">
+<section class="sustainability-section">
   <div class="container-xl">
     <div class="section-label text-center">Our Promises</div>
     <h2 class="section-title text-center mb-5">Measurable Impact</h2>
@@ -108,8 +108,8 @@
       <!-- Commitment 1 -->
       <div class="col-md-4">
         <div class="checkout-card text-center">
-          <div style="font-size: 64px; color: var(--gold); margin-bottom: 24px;">100%</div>
-          <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; margin-bottom: 16px;">Ethical Sourcing</h3>
+          <div class="sustainability-stat-number">100%</div>
+          <h3 class="sustainability-stat-title">Ethical Sourcing</h3>
           <p class="text-muted">Every supplier in our network is audited annually for fair labor practices, safe working conditions, and environmental compliance. No exceptions.</p>
         </div>
       </div>
@@ -117,8 +117,8 @@
       <!-- Commitment 2 -->
       <div class="col-md-4">
         <div class="checkout-card text-center">
-          <div style="font-size: 64px; color: var(--gold); margin-bottom: 24px;">2027</div>
-          <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; margin-bottom: 16px;">Carbon Neutral by 2027</h3>
+          <div class="sustainability-stat-number">2027</div>
+          <h3 class="sustainability-stat-title">Carbon Neutral by 2027</h3>
           <p class="text-muted">We're investing in renewable energy, carbon offset programs, and supply chain optimization to achieve full carbon neutrality by 2027.</p>
         </div>
       </div>
@@ -126,8 +126,8 @@
       <!-- Commitment 3 -->
       <div class="col-md-4">
         <div class="checkout-card text-center">
-          <div style="font-size: 64px; color: var(--gold); margin-bottom: 24px;"><i class="bi bi-recycle"></i></div>
-          <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; margin-bottom: 16px;">Zero Waste Packaging</h3>
+          <div class="sustainability-stat-number"><i class="bi bi-recycle"></i></div>
+          <h3 class="sustainability-stat-title">Zero Waste Packaging</h3>
           <p class="text-muted">All packaging is recyclable, compostable, or reusable. We've eliminated single-use plastics and work with partners who share this commitment.</p>
         </div>
       </div>
@@ -143,16 +143,16 @@
       <div class="col-lg-8 mx-auto">
         <h3 class="about-heading text-center mb-4">Our Actions</h3>
 
-        <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-top: 32px; margin-bottom: 16px;">Sustainable Materials</h4>
+        <h4 class="heading-sm">Sustainable Materials</h4>
         <p class="about-text">We prioritize natural, organic, and recycled fibers in our collections. Over 60% of our current offerings feature sustainable materials, and we're committed to reaching 90% by 2026. This includes organic cotton certified by GOTS (Global Organic Textile Standard), Tencel made from sustainably harvested wood pulp, recycled polyester from post-consumer plastic bottles, and innovative materials like Piñatex (pineapple leather) and Econyl (regenerated nylon from ocean waste).</p>
 
-        <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-top: 32px; margin-bottom: 16px;">Responsible Packaging</h4>
+        <h4 class="heading-sm">Responsible Packaging</h4>
         <p class="about-text">Every LUXE order arrives in packaging designed with the planet in mind. Our garment bags are made from FSC-certified paper, fully biodegradable within 90 days. Shipping boxes are constructed from 100% recycled cardboard and printed with soy-based inks. We've replaced plastic tape with water-activated paper tape, and our tissue paper is unbleached and compostable. Even our hang tags are printed on seed paper — plant them and watch wildflowers grow.</p>
 
-        <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-top: 32px; margin-bottom: 16px;">Community Impact</h4>
+        <h4 class="heading-sm">Community Impact</h4>
         <p class="about-text">Fashion is made by people, and we invest in the communities behind our clothes. Through our LUXE Empowerment Fund, we provide education scholarships for garment workers' children, healthcare access in manufacturing regions, and skills training programs for women in the textile industry. We partner with local NGOs in Pakistan to support vocational training, microfinance initiatives, and sustainable livelihood programs. Since 2020, we've contributed over Rs. 5 million to community development projects and trained more than 200 artisans in sustainable production techniques.</p>
 
-        <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-top: 32px; margin-bottom: 16px;">Transparency & Accountability</h4>
+        <h4 class="heading-sm">Transparency & Accountability</h4>
         <p class="about-text">We publish an annual sustainability report detailing our progress, challenges, and goals. Our supply chain map is available to customers who want to know where their clothes come from. We welcome questions, feedback, and accountability — because real change happens through honest conversation and continuous improvement.</p>
 
       </div>
@@ -171,7 +171,7 @@
       <input type="email" id="newsletterEmail" placeholder="Your email address" aria-label="Email address for newsletter">
       <button type="submit">Subscribe</button>
     </form>
-    <span class="field-error" style="max-width: 520px; margin: 0 auto; text-align: center;"></span>
+    <span class="field-error field-error-centered"></span>
     <div id="newsletterMsg" class="newsletter-msg"></div>
     <p class="newsletter-privacy">We respect your privacy. Unsubscribe anytime.</p>
   </div>

@@ -24,8 +24,8 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg border-bottom">
   <div class="container-xl justify-content-center position-relative py-2">
-    <a href="index.html" class="position-absolute start-0 text-dark" style="text-decoration: none; font-size: 14px;"><i class="bi bi-arrow-left"></i> Back to Store</a>
-    <a class="navbar-brand m-0" href="index.html" style="font-size: 32px;">Luxe</a>
+    <a href="index.html" class="position-absolute start-0 text-dark checkout-back-link"><i class="bi bi-arrow-left"></i> Back to Store</a>
+    <a class="navbar-brand m-0 checkout-brand" href="index.html">Luxe</a>
   </div>
 </nav>
 
@@ -34,7 +34,7 @@
 
 <!-- CHECKOUT SECTION -->
 <section class="checkout-section">
-  <div class="container-xl" style="max-width: 1000px;">
+  <div class="container-xl checkout-container">
     
     <div class="row g-5">
       <!-- Checkout Form -->
@@ -124,31 +124,31 @@
                 <span class="payment-icon">VISA</span>
                 <span class="payment-icon">MC</span>
                 <div class="d-flex align-items-center gap-2">
-                  <i class="bi bi-lock-fill" style="color: var(--gold); font-size: 14px;"></i>
-                  <span style="font-size: 12px; color: var(--muted);">Secure 256-bit SSL encryption</span>
+                  <i class="bi bi-lock-fill checkout-secure-icon"></i>
+                  <span class="checkout-secure-text">Secure 256-bit SSL encryption</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-dark w-100 py-3 mb-4" style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Place Order</button>
+          <button type="submit" class="btn btn-dark w-100 py-3 mb-4 btn-place-order">Place Order</button>
         </form>
       </div>
 
       <!-- Order Summary -->
       <div class="col-lg-5">
-        <div class="checkout-card" style="position: sticky; top: 20px;">
+        <div class="checkout-card checkout-sticky-card">
           <h3 class="checkout-title">Order Summary</h3>
           <div id="checkoutItemsList">
             <!-- Items rendered via JS -->
           </div>
-          
+
           <div class="mt-4 pt-3 border-top">
-            <a href="#" id="togglePromoBtn" style="font-size: 14px; color: var(--dark); text-decoration: underline;">Have a promo code?</a>
-            <div id="promoContainer" style="display: none; margin-top: 12px;">
+            <a href="#" id="togglePromoBtn" class="checkout-promo-link">Have a promo code?</a>
+            <div id="promoContainer" class="promo-toggle-container promo-container-visible">
               <div class="d-flex gap-2">
-                <input type="text" id="promoInput" class="form-control" placeholder="Enter promo code" style="border-radius: 0;">
-                <button type="button" id="applyPromoBtn" class="btn-submit" style="padding: 10px 24px;">Apply</button>
+                <input type="text" id="promoInput" class="form-control checkout-promo-input" placeholder="Enter promo code">
+                <button type="button" id="applyPromoBtn" class="btn-submit checkout-promo-btn">Apply</button>
               </div>
             </div>
           </div>
@@ -175,9 +175,9 @@
 </section>
 
 <!-- FOOTER (Simplified) -->
-<footer class="footer py-4" style="border-top: 1px solid var(--border);">
+<footer class="footer py-4 checkout-footer">
   <div class="container-xl text-center">
-    <p class="m-0 text-muted" style="font-size: 12px;">&copy; 2026 LUXE. Secure Checkout.</p>
+    <p class="m-0 text-muted checkout-footer-text">&copy; 2026 LUXE. Secure Checkout.</p>
   </div>
 </footer>
 

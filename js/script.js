@@ -193,7 +193,7 @@ function renderProducts(list) {
     grid.innerHTML += `
       <div class="col-6 col-lg-3 product-data" data-cat="${p.category}">
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="display: block;">
+          <a href="product.html?id=${p.id}" class="product-link">
             <div class="product-img-wrap">
               ${badgeHtml}
               <img src="${p.img}" alt="${p.name}" loading="lazy">
@@ -205,7 +205,7 @@ function renderProducts(list) {
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <a href="product.html?id=${p.id}" style="color: inherit; text-decoration: none;">
+            <a href="product.html?id=${p.id}" class="product-link">
               <h5>${p.name}</h5>
             </a>
             <div class="product-price">${oldPriceHtml}Rs. ${p.price.toLocaleString()}</div>
@@ -226,7 +226,7 @@ function appendProducts(list) {
     grid.innerHTML += `
       <div class="col-6 col-lg-3 product-data" data-cat="${p.category}">
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="display: block;">
+          <a href="product.html?id=${p.id}" class="product-link">
             <div class="product-img-wrap">
               ${badgeHtml}
               <img src="${p.img}" alt="${p.name}" loading="lazy">
@@ -238,7 +238,7 @@ function appendProducts(list) {
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <a href="product.html?id=${p.id}" style="color: inherit; text-decoration: none;">
+            <a href="product.html?id=${p.id}" class="product-link">
               <h5>${p.name}</h5>
             </a>
             <div class="product-price">${oldPriceHtml}Rs. ${p.price.toLocaleString()}</div>
@@ -302,7 +302,7 @@ function renderProductsWithPagination() {
     if (!completionMsg && loadMoreParent) {
       completionMsg = document.createElement('p');
       completionMsg.id = 'paginationComplete';
-      completionMsg.style.cssText = 'color: var(--muted); font-size: 14px; text-align: center; margin-top: 16px; display: none;';
+      completionMsg.className = 'pagination-complete-msg';
       completionMsg.textContent = "You've seen all products";
       loadMoreParent.appendChild(completionMsg);
     }
@@ -501,18 +501,18 @@ function renderWishlist() {
     grid.innerHTML += `
       <div class="col-6 col-lg-3">
         <div class="product-card">
-          <a href="product.html?id=${p.id}" style="display: block;">
+          <a href="product.html?id=${p.id}" class="product-link-block">
             <div class="product-img-wrap">
               <img src="${p.img}" alt="${p.name}" loading="lazy">
             </div>
           </a>
           <div class="product-actions">
             <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
-            <button class="btn-wishlist js-wishlist" data-id="${p.id}" style="color: var(--danger);" aria-label="Remove ${p.name} from wishlist"><i class="bi bi-heart-fill"></i></button>
+            <button class="btn-wishlist js-wishlist wishlist-heart-filled" data-id="${p.id}" aria-label="Remove ${p.name} from wishlist"><i class="bi bi-heart-fill"></i></button>
           </div>
           <div class="product-info">
             <div class="product-cat">${p.cat}</div>
-            <a href="product.html?id=${p.id}" style="color: inherit; text-decoration: none;">
+            <a href="product.html?id=${p.id}" class="product-link">
               <h5>${p.name}</h5>
             </a>
             <div class="product-price">Rs. ${p.price.toLocaleString()}</div>
@@ -549,7 +549,7 @@ function renderCheckout() {
             <p>${c.cat} — Qty: ${c.qty}</p>
           </div>
         </div>
-        <div style="font-size: 14px; font-weight: 500;">
+        <div class="order-summary-price">
           Rs. ${(c.price * c.qty).toLocaleString()}
         </div>
       </div>
@@ -706,7 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Success
       if (msgDiv) {
         msgDiv.textContent = "You're on the list! Welcome to the LUXE Circle.";
-        msgDiv.style.color = '#C9A96E';
+        msgDiv.classList.add('newsletter-msg-success');
       }
       showToast('Subscribed successfully!');
       emailInput.value = '';
@@ -1592,7 +1592,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tooltip) {
           tooltip = document.createElement('div');
           tooltip.className = 'cvv-hint';
-          tooltip.style.cssText = 'font-size: 11px; color: var(--muted); margin-top: 4px;';
           tooltip.textContent = '3 digits on the back of your card (4 digits for Amex).';
           cvvInput.parentElement.appendChild(tooltip);
         }
@@ -1747,7 +1746,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!successMsg) {
           successMsg = document.createElement('p');
           successMsg.className = 'success-message';
-          successMsg.style.cssText = 'color: #C9A96E; font-size: 14px; margin-top: 20px; text-align: center; line-height: 1.6;';
           forgotPasswordForm.appendChild(successMsg);
         }
 
