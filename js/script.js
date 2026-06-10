@@ -575,7 +575,122 @@ function toggleCart() {
 
 function toggleSearch() {
   const el = document.getElementById('searchOverlay');
-  if (el) el.classList.toggle('open');
+  if (el) {
+    el.classList.toggle('open');
+    if (el.classList.contains('open')) {
+      renderRecentSearches();
+    }
+  }
+}
+
+// ========================================
+// RECENT SEARCHES FUNCTIONS
+// ========================================
+
+function saveSearchTerm(query) {
+  let searches = [];
+  const stored = localStorage.getItem('luxe_recent_searches');
+  
+  if (stored) {
+    try {
+      searches = JSON.parse(stored);
+    } catch (e) {
+      searches = [];
+    }
+  }
+  
+  // Remove any existing identical term case-insensitively
+  searches = searches.filter(term => term.toLowerCase() !== query.toLowerCase());
+  
+  // Unshift new term
+  searches.unshift(query);
+  
+  // Slice to 5
+  searches = searches.slice(0, 5);
+  
+  // Save back
+  localStorage.setItem('luxe_recent_searches', JSON.stringify(searches));
+}
+
+function renderRecentSearches() {
+  let searches = [];
+  const stored = localStorage.getItem('luxe_recent_searches');
+  
+  if (stored) {
+    try {
+      searches = JSON.parse(stored);
+    } catch (e) {
+      searches = [];
+    }
+  }
+  
+  const recentSearchesContainer = document.getElementById('recentSearches');
+  const recentSearchList = document.getElementById('recentSearchList');
+  
+  if (!recentSearchesContainer || !recentSearchList) return;
+  
+  if (searches.length === 0) {
+    recentSearchesContainer.classList.remove('visible');
+    recentSearchList.innerHTML = '';
+    return;
+  }
+  
+  recentSearchesContainer.classList.add('visible');
+  recentSearchList.innerHTML = '';
+  
+  searches.forEach(term => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'search-chip';
+    chip.innerHTML = '<i class="bi bi-clock-history"></i>' + sanitizeInput(term);
+    
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.value = term;
+        // Trigger search
+        performSearch(term);
+      }
+    });
+    
+    recentSearchList.appendChild(chip);
+  });
+}
+
+function clearRecentSearches() {
+  localStorage.removeItem('luxe_recent_searches');
+  const recentSearchesContainer = document.getElementById('recentSearches');
+  const recentSearchList = document.getElementById('recentSearchList');
+  
+  if (recentSearchesContainer) {
+    recentSearchesContainer.classList.remove('visible');
+  }
+  if (recentSearchList) {
+    recentSearchList.innerHTML = '';
+  }
+  
+  showToast('Recent searches cleared.');
+}
+
+function performSearch(query) {
+  const sanitized = sanitizeInput(query);
+  
+  // Filter products based on search query
+  const results = products.filter(p =>
+    p.name.toLowerCase().includes(sanitized.toLowerCase()) ||
+    p.cat.toLowerCase().includes(sanitized.toLowerCase())
+  );
+  
+  // Store query and results in sessionStorage
+  sessionStorage.setItem('luxe_search_query', sanitized);
+  sessionStorage.setItem('luxe_search_results', JSON.stringify(results));
+  
+  // Save to recent searches
+  saveSearchTerm(query);
+  
+  // Redirect to search page
+  window.location.href = 'search.html';
 }
 
 function showToast(msg) {
@@ -817,22 +932,20 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        // Sanitize input
-        const sanitized = sanitizeInput(query);
-
-        // Filter products based on search query
-        const results = products.filter(p =>
-          p.name.toLowerCase().includes(sanitized.toLowerCase()) ||
-          p.cat.toLowerCase().includes(sanitized.toLowerCase())
-        );
-
-        // Store query and results in sessionStorage
-        sessionStorage.setItem('luxe_search_query', sanitized);
-        sessionStorage.setItem('luxe_search_results', JSON.stringify(results));
-
-        // Redirect to search page
-        window.location.href = 'search.html';
+        // Perform search
+        performSearch(query);
       }
+    });
+  }
+
+  // ========================================
+  // CLEAR RECENT SEARCHES BUTTON
+  // ========================================
+  const clearRecentSearchesBtn = document.getElementById('clearRecentSearches');
+  if (clearRecentSearchesBtn) {
+    clearRecentSearchesBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      clearRecentSearches();
     });
   }
 
