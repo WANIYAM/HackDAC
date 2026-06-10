@@ -96,7 +96,7 @@
       </div>
 
       <!-- Product Info -->
-      <div class="col-lg-6">
+      <div class="col-lg-6" id="productDetails">
         <div class="section-label" id="productCategory"></div>
         <h1 id="productName" class="product-detail-title"></h1>
 
@@ -272,6 +272,21 @@
 <button class="back-to-top" id="backToTop" aria-label="Back to top">
   <i class="bi bi-arrow-up" aria-hidden="true"></i>
 </button>
+
+<div class="sticky-atb" id="stickyATB">
+  <div class="container-xl">
+    <div class="sticky-atb-inner">
+      <div class="sticky-atb-info">
+        <span class="sticky-atb-name" id="stickyProductName">—</span>
+        <span class="sticky-atb-price" id="stickyProductPrice">—</span>
+      </div>
+      <div class="sticky-atb-actions">
+        <div class="sticky-size-wrap" id="stickySizeWrap"></div>
+        <button class="sticky-atb-btn" id="stickyAddToCart">Add to Bag</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
@@ -503,6 +518,77 @@
         e.target.style.display = 'none';
       }
     }, true);
+
+    // ========================================
+    // POPULATE STICKY ADD-TO-BAG BAR
+    // ========================================
+    document.getElementById('stickyProductName').textContent = product.name;
+    document.getElementById('stickyProductPrice').textContent = `Rs. ${product.price.toLocaleString()}`;
+
+    // Clone size buttons to sticky bar
+    const stickySizeWrap = document.getElementById('stickySizeWrap');
+    const sizeButtons = document.querySelectorAll('#sizeSelector .filter-tab');
+    sizeButtons.forEach(btn => {
+      const stickyBtn = btn.cloneNode(true);
+      stickyBtn.className = 'filter-tab sticky-size-btn';
+      stickyBtn.addEventListener('click', () => {
+        // Update main size selector
+        document.querySelectorAll('#sizeSelector .filter-tab').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        document.querySelector(`#sizeSelector .filter-tab[data-size="${stickyBtn.dataset.size}"]`).classList.add('active');
+        document.querySelector(`#sizeSelector .filter-tab[data-size="${stickyBtn.dataset.size}"]`).setAttribute('aria-pressed', 'true');
+
+        // Update sticky size buttons
+        document.querySelectorAll('.sticky-size-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        stickyBtn.classList.add('active');
+        stickyBtn.setAttribute('aria-pressed', 'true');
+
+        selectedSize = stickyBtn.dataset.size;
+      });
+      stickySizeWrap.appendChild(stickyBtn);
+    });
+
+    // Sync main size selector with sticky bar
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update sticky size buttons
+        document.querySelectorAll('.sticky-size-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        const stickyBtn = document.querySelector(`.sticky-size-btn[data-size="${btn.dataset.size}"]`);
+        if (stickyBtn) {
+          stickyBtn.classList.add('active');
+          stickyBtn.setAttribute('aria-pressed', 'true');
+        }
+      });
+    });
+
+    // Sticky Add to Bag button
+    document.getElementById('stickyAddToCart').addEventListener('click', () => {
+      const cartItem = {
+        ...product,
+        size: selectedSize,
+        qty: quantity
+      };
+
+      // Check if item with same size already exists
+      const existingIndex = cart.findIndex(item => item.id === product.id && item.size === selectedSize);
+      if (existingIndex > -1) {
+        cart[existingIndex].qty += quantity;
+      } else {
+        cart.push(cartItem);
+      }
+
+      saveCart();
+      updateCart();
+      showToast(`${product.name} (Size ${selectedSize}) added to bag!`);
+    });
 
     // Dismiss page loader after product is fully rendered
     if (typeof window.dismissPageLoader === 'function') {

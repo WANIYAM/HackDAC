@@ -1868,6 +1868,47 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ========================================
+  // STICKY ADD-TO-BAG BAR SCROLL BEHAVIOR
+  // ========================================
+  if (document.getElementById('stickyATB')) {
+    const stickyBar = document.getElementById('stickyATB');
+    const productDetails = document.getElementById('productDetails');
+    let ticking = false;
+
+    const handleStickyBarScroll = () => {
+      if (productDetails) {
+        const rect = productDetails.getBoundingClientRect();
+        const isScrolledPast = rect.bottom < 0;
+
+        if (isScrolledPast) {
+          stickyBar.classList.add('visible');
+          // Adjust back-to-top button position to avoid overlap
+          if (backToTopButton) {
+            backToTopButton.style.bottom = 'calc(64px + 32px)';
+          }
+        } else {
+          stickyBar.classList.remove('visible');
+          // Restore back-to-top button to normal position
+          if (backToTopButton) {
+            backToTopButton.style.bottom = '32px';
+          }
+        }
+      }
+      ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleStickyBarScroll);
+        ticking = true;
+        setTimeout(() => {
+          ticking = false;
+        }, 100);
+      }
+    });
+  }
+
   // Dynamic nav-link active state based on current URL
   const navLinks = document.querySelectorAll('.nav-link');
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
