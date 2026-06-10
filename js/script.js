@@ -208,6 +208,110 @@ function saveWishlist() {
   localStorage.setItem('luxe_wishlist', JSON.stringify(wishlist));
 }
 
+function saveRecentlyViewed(productId) {
+  let recentlyViewed = JSON.parse(localStorage.getItem('luxe_recently_viewed')) || [];
+
+  // Remove existing entry to avoid duplicates
+  recentlyViewed = recentlyViewed.filter(id => id !== productId);
+
+  // Add new entry to the front
+  recentlyViewed.unshift(productId);
+
+  // Keep only the first 4 entries
+  recentlyViewed = recentlyViewed.slice(0, 4);
+
+  localStorage.setItem('luxe_recently_viewed', JSON.stringify(recentlyViewed));
+}
+
+function getRecentlyViewed() {
+  return JSON.parse(localStorage.getItem('luxe_recently_viewed')) || [];
+}
+
+function renderRecentlyViewed(currentId) {
+  const grid = document.getElementById('recentlyViewedGrid');
+  const section = document.getElementById('recentlyViewedSection');
+  if (!grid || !section) return;
+
+  // Get recently viewed IDs
+  let recentIds = getRecentlyViewed();
+
+  // Filter out current product ID
+  if (currentId) {
+    recentIds = recentIds.filter(id => id !== currentId);
+  }
+
+  // Map IDs to product objects
+  const recentProducts = recentIds
+    .map(id => products.find(p => p.id === id))
+    .filter(p => p !== undefined)
+    .slice(0, 3); // Show up to 3 products
+
+  // Hide section if no products to show
+  if (recentProducts.length < 1) {
+    section.classList.add('d-none');
+    return;
+  }
+
+  // Show section and render products
+  section.classList.remove('d-none');
+  grid.innerHTML = '';
+
+  recentProducts.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'col-md-6 col-lg-4';
+    card.innerHTML = `
+      <div class="product-card">
+        <a href="product.html?id=${p.id}" class="product-link">
+          <div class="product-img-wrap">
+            <div class="img-skeleton" id="skel-recent-${p.id}"></div>
+            <img src="${p.img}" alt="${p.name}" class="product-img product-card-img" loading="lazy" data-skelid="skel-recent-${p.id}">
+            ${p.badge ? `<span class="product-badge badge-sale">${p.badge}</span>` : ''}
+          </div>
+        </a>
+        <div class="product-info">
+          <div class="product-cat">${p.category}</div>
+          <a href="product.html?id=${p.id}" class="product-link">
+            <div class="product-name">${p.name}</div>
+          </a>
+          <div class="product-price">
+            Rs. ${p.price.toLocaleString()}
+            ${p.oldPrice ? `<span class="product-old-price">Rs. ${p.oldPrice.toLocaleString()}</span>` : ''}
+          </div>
+        </div>
+        <button class="btn-add-cart js-add-cart" data-id="${p.id}">Add to Bag</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Setup event delegation for recently viewed product images
+  grid.addEventListener('load', function(e) {
+    if (e.target.tagName === 'IMG' && e.target.classList.contains('product-card-img')) {
+      const skelId = e.target.getAttribute('data-skelid');
+      if (skelId) {
+        const skeleton = document.getElementById(skelId);
+        if (skeleton) skeleton.style.display = 'none';
+      }
+      e.target.classList.add('loaded');
+    }
+  }, true);
+
+  grid.addEventListener('error', function(e) {
+    if (e.target.tagName === 'IMG' && e.target.classList.contains('product-card-img')) {
+      const skelId = e.target.getAttribute('data-skelid');
+      if (skelId) {
+        const skeleton = document.getElementById(skelId);
+        if (skeleton) {
+          skeleton.innerHTML = `<div class="img-skeleton-unavailable"><i class="bi bi-image" aria-hidden="true"></i><p>Image unavailable</p></div>`;
+          skeleton.classList.remove('img-skeleton');
+        }
+      }
+      e.target.style.display = 'none';
+    }
+  }, true);
+}
+
+
 function renderProducts(list) {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
@@ -429,9 +533,13 @@ function updateCart() {
     if (cartItemsDiv) {
       cartItemsDiv.innerHTML = cart.map(c => `
         <div class="cart-item">
-          <img src="${c.img}" alt="${c.name}" class="cart-item-img">
+          <a href="product.html?id=${c.id}" class="cart-item-link">
+            <img src="${c.img}" alt="${c.name}" class="cart-item-img">
+          </a>
           <div class="cart-item-info">
-            <h6>${c.name}</h6>
+            <a href="product.html?id=${c.id}" class="cart-item-link">
+              <h6>${c.name}</h6>
+            </a>
             <p>${c.cat}</p>
             <div class="qty-controls">
               <button class="qty-btn js-change-qty" data-id="${c.id}" data-delta="-1" aria-label="Decrease quantity of ${c.name}">−</button>
@@ -816,6 +924,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const id = parseInt(btn.getAttribute('data-id'), 10);
       const delta = parseInt(btn.getAttribute('data-delta'), 10);
       changeQty(id, delta);
+    }
+    // Handle Cart Item Link - close cart before navigation
+    if (e.target.closest('.cart-item-link')) {
+      toggleCart();
+      // Allow default navigation to proceed
     }
     // Handle Filter Tabs
     if (e.target.closest('.filter-tab')) {
@@ -1222,6 +1335,279 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast('Login failed. Please check your credentials.');
           if (submitBtn) resetButton(submitBtn, 'Sign In');
         }
+      }, 800);
+    });
+  }
+
+  // ========================================
+  // SIGNUP FORM VALIDATION
+  // ========================================
+  const signupForm = document.getElementById('signupForm');
+  if (signupForm) {
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const emailInput = document.getElementById('signupEmail');
+    const passwordInput = document.getElementById('signupPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const agreeTermsCheckbox = document.getElementById('agreeTerms');
+    const subscribeCheckbox = document.getElementById('subscribeNewsletter');
+    const submitBtn = signupForm.querySelector('button[type="submit"]');
+
+    // Password toggle functionality
+    const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+    if (toggleSignupPassword && passwordInput) {
+      toggleSignupPassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        if (type === 'text') {
+          toggleSignupPassword.classList.remove('bi-eye');
+          toggleSignupPassword.classList.add('bi-eye-slash');
+        } else {
+          toggleSignupPassword.classList.remove('bi-eye-slash');
+          toggleSignupPassword.classList.add('bi-eye');
+        }
+      });
+    }
+
+    if (toggleConfirmPassword && confirmPasswordInput) {
+      toggleConfirmPassword.addEventListener('click', () => {
+        const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPasswordInput.setAttribute('type', type);
+        if (type === 'text') {
+          toggleConfirmPassword.classList.remove('bi-eye');
+          toggleConfirmPassword.classList.add('bi-eye-slash');
+        } else {
+          toggleConfirmPassword.classList.remove('bi-eye-slash');
+          toggleConfirmPassword.classList.add('bi-eye');
+        }
+      });
+    }
+
+    // First name validation
+    const validateSignupFirstName = () => {
+      const val = firstNameInput.value.trim();
+
+      if (!val) {
+        showFieldError(firstNameInput, 'First name is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(firstNameInput, 'First name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(firstNameInput, 'First name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(firstNameInput, 'First name must be at least 2 characters.');
+        return false;
+      }
+      if (val.length > 40) {
+        showFieldError(firstNameInput, 'First name cannot exceed 40 characters.');
+        return false;
+      }
+
+      showFieldSuccess(firstNameInput);
+      return true;
+    };
+
+    // Last name validation
+    const validateSignupLastName = () => {
+      const val = lastNameInput.value.trim();
+
+      if (!val) {
+        showFieldError(lastNameInput, 'Last name is required.');
+        return false;
+      }
+      if (/\d/.test(val)) {
+        showFieldError(lastNameInput, 'Last name cannot contain numbers.');
+        return false;
+      }
+      if (/[@#$%&*()+=[\]{}|\\;:'"<>,?/]/.test(val)) {
+        showFieldError(lastNameInput, 'Last name cannot contain special characters.');
+        return false;
+      }
+      if (val.length < 2) {
+        showFieldError(lastNameInput, 'Last name must be at least 2 characters.');
+        return false;
+      }
+      if (val.length > 40) {
+        showFieldError(lastNameInput, 'Last name cannot exceed 40 characters.');
+        return false;
+      }
+
+      showFieldSuccess(lastNameInput);
+      return true;
+    };
+
+    // Email validation
+    const validateSignupEmail = () => {
+      const val = emailInput.value.trim();
+
+      if (!val) {
+        showFieldError(emailInput, 'Email address is required.');
+        return false;
+      }
+      if (/\s/.test(emailInput.value)) {
+        showFieldError(emailInput, 'Email address cannot contain spaces.');
+        return false;
+      }
+      if (!val.includes('@')) {
+        showFieldError(emailInput, "Please include '@' in your email.");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        showFieldError(emailInput, 'Please enter a valid email address.');
+        return false;
+      }
+
+      showFieldSuccess(emailInput);
+      return true;
+    };
+
+    // Password validation
+    const validateSignupPassword = () => {
+      const val = passwordInput.value;
+
+      if (!val) {
+        showFieldError(passwordInput, 'Password is required.');
+        return false;
+      }
+      if (val.length < 8) {
+        showFieldError(passwordInput, 'Password must be at least 8 characters and include both letters and numbers.');
+        return false;
+      }
+      // Must contain at least one letter
+      if (!/[a-zA-Z]/.test(val)) {
+        showFieldError(passwordInput, 'Password must be at least 8 characters and include both letters and numbers.');
+        return false;
+      }
+      // Must contain at least one number
+      if (!/\d/.test(val)) {
+        showFieldError(passwordInput, 'Password must be at least 8 characters and include both letters and numbers.');
+        return false;
+      }
+
+      showFieldSuccess(passwordInput);
+      return true;
+    };
+
+    // Confirm password validation
+    const validateConfirmPassword = () => {
+      const val = confirmPasswordInput.value;
+      const passwordVal = passwordInput.value;
+
+      if (!val) {
+        showFieldError(confirmPasswordInput, 'Please confirm your password.');
+        return false;
+      }
+      if (val !== passwordVal) {
+        showFieldError(confirmPasswordInput, 'Passwords do not match.');
+        return false;
+      }
+
+      showFieldSuccess(confirmPasswordInput);
+      return true;
+    };
+
+    // Terms checkbox validation
+    const validateAgreeTerms = () => {
+      const errorSpan = agreeTermsCheckbox.parentElement.nextElementSibling;
+
+      if (!agreeTermsCheckbox.checked) {
+        if (errorSpan && errorSpan.classList.contains('field-error')) {
+          errorSpan.textContent = 'You must agree to the Terms of Service and Privacy Policy to continue.';
+          errorSpan.style.display = 'block';
+        }
+        return false;
+      }
+
+      if (errorSpan && errorSpan.classList.contains('field-error')) {
+        errorSpan.textContent = '';
+        errorSpan.style.display = 'none';
+      }
+      return true;
+    };
+
+    // Real-time validation
+    if (firstNameInput) firstNameInput.addEventListener('blur', validateSignupFirstName);
+    if (lastNameInput) lastNameInput.addEventListener('blur', validateSignupLastName);
+    if (emailInput) emailInput.addEventListener('blur', validateSignupEmail);
+    if (passwordInput) passwordInput.addEventListener('blur', validateSignupPassword);
+    if (confirmPasswordInput) confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+    if (agreeTermsCheckbox) agreeTermsCheckbox.addEventListener('change', validateAgreeTerms);
+
+    // Form submission
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const isFirstNameValid = validateSignupFirstName();
+      const isLastNameValid = validateSignupLastName();
+      const isEmailValid = validateSignupEmail();
+      const isPasswordValid = validateSignupPassword();
+      const isConfirmPasswordValid = validateConfirmPassword();
+      const isTermsValid = validateAgreeTerms();
+
+      if (!isFirstNameValid) {
+        firstNameInput.focus();
+        return;
+      }
+      if (!isLastNameValid) {
+        lastNameInput.focus();
+        return;
+      }
+      if (!isEmailValid) {
+        emailInput.focus();
+        return;
+      }
+      if (!isPasswordValid) {
+        passwordInput.focus();
+        return;
+      }
+      if (!isConfirmPasswordValid) {
+        confirmPasswordInput.focus();
+        return;
+      }
+      if (!isTermsValid) {
+        agreeTermsCheckbox.focus();
+        return;
+      }
+
+      // All validations passed
+      if (submitBtn) setButtonLoading(submitBtn, 'Creating Account...');
+
+      setTimeout(() => {
+        const firstName = firstNameInput.value.trim();
+        const lastName = lastNameInput.value.trim();
+        const email = emailInput.value.trim();
+        const subscribe = subscribeCheckbox.checked;
+
+        // Store user object in localStorage
+        const user = {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          createdAt: new Date().toISOString()
+        };
+        localStorage.setItem('luxe_user', JSON.stringify(user));
+
+        // If subscribed, also add to newsletter
+        if (subscribe) {
+          let newsletter = JSON.parse(localStorage.getItem('luxe_newsletter')) || [];
+          if (!newsletter.includes(email)) {
+            newsletter.push(email);
+            localStorage.setItem('luxe_newsletter', JSON.stringify(newsletter));
+          }
+        }
+
+        showToast('Account created! Welcome to LUXE.');
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
       }, 800);
     });
   }
@@ -1874,6 +2260,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('stickyATB')) {
     const stickyBar = document.getElementById('stickyATB');
     const productDetails = document.getElementById('productDetails');
+    const whatsappFloat = document.getElementById('whatsappFloat');
     let ticking = false;
 
     const handleStickyBarScroll = () => {
@@ -1887,11 +2274,19 @@ document.addEventListener('DOMContentLoaded', () => {
           if (backToTopButton) {
             backToTopButton.style.bottom = 'calc(64px + 32px)';
           }
+          // Adjust WhatsApp button position to sit above sticky bar
+          if (whatsappFloat) {
+            whatsappFloat.style.bottom = 'calc(64px + 32px)';
+          }
         } else {
           stickyBar.classList.remove('visible');
           // Restore back-to-top button to normal position
           if (backToTopButton) {
             backToTopButton.style.bottom = '32px';
+          }
+          // Restore WhatsApp button to normal position
+          if (whatsappFloat) {
+            whatsappFloat.style.bottom = '32px';
           }
         }
       }
@@ -1909,9 +2304,104 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ========================================
+  // SIZE GUIDE MODAL
+  // ========================================
+  if (document.getElementById('sizeGuideOverlay')) {
+    const sizeGuideOverlay = document.getElementById('sizeGuideOverlay');
+    const openSizeGuideBtn = document.getElementById('openSizeGuide');
+    const closeSizeGuideBtn = document.getElementById('closeSizeGuide');
+    const sizeGuideTabs = document.querySelectorAll('.size-guide-tab');
+    const womenSizesContent = document.getElementById('womenSizes');
+    const menSizesContent = document.getElementById('menSizes');
+
+    // Open modal
+    if (openSizeGuideBtn) {
+      openSizeGuideBtn.addEventListener('click', () => {
+        sizeGuideOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    // Close modal
+    const closeSizeGuide = () => {
+      sizeGuideOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    if (closeSizeGuideBtn) {
+      closeSizeGuideBtn.addEventListener('click', closeSizeGuide);
+    }
+
+    // Close on overlay background click
+    sizeGuideOverlay.addEventListener('click', (e) => {
+      if (e.target === sizeGuideOverlay) {
+        closeSizeGuide();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sizeGuideOverlay.classList.contains('open')) {
+        closeSizeGuide();
+      }
+    });
+
+    // Tab switching
+    sizeGuideTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        sizeGuideTabs.forEach(t => t.classList.remove('active'));
+
+        // Add active class to clicked tab
+        tab.classList.add('active');
+
+        // Hide all content
+        if (womenSizesContent) womenSizesContent.classList.add('d-none');
+        if (menSizesContent) menSizesContent.classList.add('d-none');
+
+        // Show matching content
+        const tabType = tab.getAttribute('data-tab');
+        if (tabType === 'women' && womenSizesContent) {
+          womenSizesContent.classList.remove('d-none');
+        } else if (tabType === 'men' && menSizesContent) {
+          menSizesContent.classList.remove('d-none');
+        }
+      });
+    });
+
+    // Auto-select tab based on product category
+    // This should run after the product is loaded on product.html
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get('id'));
+
+    if (productId && typeof products !== 'undefined') {
+      const product = products.find(p => p.id === productId);
+      if (product && product.category === 'men') {
+        // Switch to Men tab
+        sizeGuideTabs.forEach(t => {
+          if (t.getAttribute('data-tab') === 'men') {
+            t.classList.add('active');
+          } else {
+            t.classList.remove('active');
+          }
+        });
+        if (womenSizesContent) womenSizesContent.classList.add('d-none');
+        if (menSizesContent) menSizesContent.classList.remove('d-none');
+      }
+    }
+  }
+
+  // ========================================
+  // RECENTLY VIEWED ON INDEX.HTML
+  // ========================================
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  if (currentPage === 'index.html' && document.getElementById('recentlyViewedGrid')) {
+    renderRecentlyViewed(null);
+  }
+
   // Dynamic nav-link active state based on current URL
   const navLinks = document.querySelectorAll('.nav-link');
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
   navLinks.forEach(link => {
     const href = link.getAttribute('href');
     if (href === currentPage) {
@@ -1933,4 +2423,136 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // ========================================
+  // COOKIE CONSENT BANNER
+  // ========================================
+  const cookieBanner = document.getElementById('cookieBanner');
+  const cookieAccept = document.getElementById('cookieAccept');
+  const cookieDecline = document.getElementById('cookieDecline');
+
+  if (cookieBanner) {
+    const cookieChoice = localStorage.getItem('luxe_cookie_consent');
+    if (!cookieChoice) {
+      setTimeout(() => cookieBanner.classList.add('visible'), 1500);
+    }
+
+    if (cookieAccept) {
+      cookieAccept.addEventListener('click', () => {
+        localStorage.setItem('luxe_cookie_consent', 'accepted');
+        cookieBanner.classList.remove('visible');
+        cookieBanner.classList.add('hidden');
+        showToast('Cookie preferences saved.');
+      });
+    }
+
+    if (cookieDecline) {
+      cookieDecline.addEventListener('click', () => {
+        localStorage.setItem('luxe_cookie_consent', 'declined');
+        cookieBanner.classList.remove('visible');
+        cookieBanner.classList.add('hidden');
+      });
+    }
+  }
+
+  // ========================================
+  // ORDER TRACKING FUNCTIONALITY
+  // ========================================
+  const trackOrderBtn = document.getElementById('trackOrderBtn');
+  if (trackOrderBtn) {
+    const trackingInput = document.getElementById('trackingInput');
+    const trackingResult = document.getElementById('trackingResult');
+    const trackingError = document.getElementById('trackingError');
+
+    trackOrderBtn.addEventListener('click', () => {
+      const orderNumber = trackingInput.value.trim();
+
+      // Validation
+      if (!orderNumber) {
+        showToast('Please enter an order number.');
+        return;
+      }
+
+      if (!orderNumber.startsWith('#LX-')) {
+        showToast('Please enter a valid LUXE order number starting with #LX-.');
+        return;
+      }
+
+      if (orderNumber.length < 8) {
+        showToast('Order number is too short.');
+        return;
+      }
+
+      // Validate format: #LX-XXXXXX-XXX (at least)
+      const formatRegex = /^#LX-[A-Z0-9]+-[A-Z0-9]+$/i;
+      if (!formatRegex.test(orderNumber)) {
+        // Show error
+        trackingError.classList.remove('d-none');
+        trackingResult.classList.add('d-none');
+        return;
+      }
+
+      // Simulated successful lookup
+      trackingError.classList.add('d-none');
+      trackingResult.classList.remove('d-none');
+
+      // Display order number
+      document.getElementById('resultOrderNumber').textContent = orderNumber;
+
+      // Randomly assign status (1-4)
+      const currentStatus = Math.floor(Math.random() * 4) + 1;
+
+      // Update stepper
+      const steps = [
+        document.getElementById('step1'),
+        document.getElementById('step2'),
+        document.getElementById('step3'),
+        document.getElementById('step4')
+      ];
+
+      steps.forEach((step, index) => {
+        step.classList.remove('completed', 'active');
+        if (index + 1 < currentStatus) {
+          step.classList.add('completed');
+        } else if (index + 1 === currentStatus) {
+          step.classList.add('active');
+        }
+      });
+
+      // Calculate delivery date (today + 3 days)
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + 3);
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = deliveryDate.toLocaleDateString('en-US', options);
+      document.getElementById('resultDeliveryDate').textContent = formattedDate;
+
+      // Display sample items
+      const sampleItems = [
+        { name: 'Silk Drape Midi Dress', price: 8500, img: 'assets/Silk Drape Midi Dress.jpg' },
+        { name: 'Premium Leather Tote', price: 9200, img: 'assets/Premium Leather Tote.jpg' }
+      ];
+
+      const itemsHtml = sampleItems.map(item => `
+        <div style="display: flex; gap: 16px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+          <img src="${item.img}" alt="${item.name}" style="width: 60px; height: 80px; object-fit: cover;">
+          <div style="flex: 1;">
+            <div style="font-size: 14px; margin-bottom: 4px;">${item.name}</div>
+            <div style="font-size: 14px; color: var(--gold);">Rs. ${item.price.toLocaleString()}</div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('resultItems').innerHTML = itemsHtml;
+
+      // Scroll to result
+      trackingResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // Allow Enter key to trigger tracking
+    trackingInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        trackOrderBtn.click();
+      }
+    });
+  }
 });

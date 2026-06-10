@@ -68,6 +68,12 @@
   <i class="bi bi-search search-icon" aria-hidden="true"></i>
   <label for="searchInput" class="visually-hidden">Search products</label>
   <input type="text" id="searchInput" placeholder="Search for products, collections..." aria-label="Search products">
+<div class="recent-searches" id="recentSearches">
+  <span class="recent-searches-label">Recent Searches</span>
+  <div class="recent-searches-list" id="recentSearchList"></div>
+  <button class="recent-searches-clear" id="clearRecentSearches">Clear</button>
+</div>
+
   <button class="search-close js-toggle-search" aria-label="Close search"><i class="bi bi-x" aria-hidden="true"></i></button>
 </div>
 
@@ -87,11 +93,16 @@
   <div class="container-xl">
     <div class="row g-5">
 
-      <!-- Product Image -->
+      <!-- Product Image Gallery -->
       <div class="col-lg-6">
-        <div class="product-img-wrap" style="position: relative; width: 100%; aspect-ratio: 3/4; overflow: hidden;">
-          <div class="img-skeleton" id="main-skel" style="position: absolute; top: 0; left: 0; z-index: 1; width: 100%; height: 100%; background-size: 800px 100%;"></div>
-          <img id="productImage" src="" alt="" class="product-detail-img product-card-img" data-skelid="main-skel" style="position: absolute; top: 0; left: 0; z-index: 2; width: 100%; height: 100%;">
+        <div class="product-gallery">
+          <div class="gallery-main">
+            <img src="" alt="" id="galleryMainImg" class="gallery-main-img" loading="lazy">
+            <button class="gallery-zoom" id="galleryZoom" aria-label="Zoom image">
+              <i class="bi bi-zoom-in" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="gallery-thumbs" id="galleryThumbs"></div>
         </div>
       </div>
 
@@ -119,6 +130,9 @@
             <button class="filter-tab" data-size="L" aria-pressed="false">L</button>
             <button class="filter-tab" data-size="XL" aria-pressed="false">XL</button>
           </div>
+          <button class="size-guide-trigger" id="openSizeGuide" type="button">
+            <i class="bi bi-rulers me-1" aria-hidden="true"></i> Size Guide
+          </button>
         </div>
 
         <!-- Quantity Selector -->
@@ -158,6 +172,32 @@
     <div class="row g-4" id="recommendedProducts"></div>
   </div>
 </section>
+
+<!-- RECENTLY VIEWED SECTION -->
+<section class="products-section d-none" id="recentlyViewedSection">
+  <div class="container-xl">
+    <div class="section-label">Your History</div>
+    <h2 class="section-title">Recently Viewed</h2>
+    <div class="row g-4" id="recentlyViewedGrid"></div>
+  </div>
+</section>
+
+<!-- Zoom Lightbox -->
+<div class="gallery-lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Image zoom view">
+  <div class="lightbox-overlay" id="lightboxOverlay"></div>
+  <div class="lightbox-content">
+    <img src="" alt="" id="lightboxImg">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close zoom view">
+      <i class="bi bi-x" aria-hidden="true"></i>
+    </button>
+    <button class="lightbox-prev" id="lightboxPrev" aria-label="Previous image">
+      <i class="bi bi-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button class="lightbox-next" id="lightboxNext" aria-label="Next image">
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
 
 <!-- NEWSLETTER -->
 <section class="newsletter-section">
@@ -206,6 +246,7 @@
           <li><a href="faq.html">FAQ</a></li>
           <li><a href="shipping-info.html">Shipping Info</a></li>
           <li><a href="shipping-returns.html">Returns</a></li>
+          <li><a href="order-tracking.html">Track Order</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
@@ -273,6 +314,88 @@
   <i class="bi bi-arrow-up" aria-hidden="true"></i>
 </button>
 
+<div class="size-guide-overlay" id="sizeGuideOverlay" role="dialog" aria-modal="true" aria-labelledby="sizeGuideTitle">
+  <div class="size-guide-modal">
+    <div class="size-guide-header">
+      <h4 id="sizeGuideTitle">Size Guide</h4>
+      <button class="size-guide-close" id="closeSizeGuide" aria-label="Close size guide">
+        <i class="bi bi-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="size-guide-body">
+      <div class="size-guide-tabs">
+        <button class="size-guide-tab active" data-tab="women">Women</button>
+        <button class="size-guide-tab" data-tab="men">Men</button>
+      </div>
+      <div class="size-guide-content" id="womenSizes">
+        <p class="size-guide-note">All measurements are in centimetres (CM). For inches divide by 2.54.</p>
+        <div class="table-responsive">
+          <table class="size-table">
+            <thead>
+              <tr><th>Size</th><th>Bust</th><th>Waist</th><th>Hips</th><th>UK Size</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>XS</td><td>80–83</td><td>62–65</td><td>88–91</td><td>6–8</td></tr>
+              <tr><td>S</td><td>84–87</td><td>66–69</td><td>92–95</td><td>8–10</td></tr>
+              <tr><td>M</td><td>88–92</td><td>70–74</td><td>96–100</td><td>10–12</td></tr>
+              <tr><td>L</td><td>93–97</td><td>75–79</td><td>101–105</td><td>12–14</td></tr>
+              <tr><td>XL</td><td>98–103</td><td>80–85</td><td>106–111</td><td>14–16</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="size-guide-tip">
+          <i class="bi bi-info-circle me-2"></i>
+          <span>If you are between sizes we recommend sizing up for a more comfortable fit.</span>
+        </div>
+      </div>
+      <div class="size-guide-content d-none" id="menSizes">
+        <p class="size-guide-note">All measurements are in centimetres (CM). For inches divide by 2.54.</p>
+        <div class="table-responsive">
+          <table class="size-table">
+            <thead>
+              <tr><th>Size</th><th>Chest</th><th>Waist</th><th>Hips</th><th>UK Size</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>XS</td><td>84–87</td><td>70–73</td><td>84–87</td><td>34</td></tr>
+              <tr><td>S</td><td>88–91</td><td>74–77</td><td>88–91</td><td>36</td></tr>
+              <tr><td>M</td><td>92–95</td><td>78–81</td><td>92–95</td><td>38</td></tr>
+              <tr><td>L</td><td>96–99</td><td>82–85</td><td>96–99</td><td>40</td></tr>
+              <tr><td>XL</td><td>100–104</td><td>86–90</td><td>100–104</td><td>42</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="size-guide-tip">
+          <i class="bi bi-info-circle me-2"></i>
+          <span>For suits and blazers measure your chest at its widest point and choose the size that matches.</span>
+        </div>
+      </div>
+      <div class="size-guide-measure">
+        <h5>How to Measure</h5>
+        <div class="row g-3 mt-2">
+          <div class="col-md-4">
+            <div class="measure-item">
+              <i class="bi bi-arrows-vertical measure-icon"></i>
+              <div><strong>Bust / Chest</strong><p>Measure around the fullest part of your chest keeping the tape parallel to the floor.</p></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="measure-item">
+              <i class="bi bi-arrows-vertical measure-icon"></i>
+              <div><strong>Waist</strong><p>Measure around your natural waistline — the narrowest part of your torso.</p></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="measure-item">
+              <i class="bi bi-arrows-vertical measure-icon"></i>
+              <div><strong>Hips</strong><p>Measure around the fullest part of your hips approximately 20cm below your waistline.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="sticky-atb" id="stickyATB">
   <div class="container-xl">
     <div class="sticky-atb-inner">
@@ -333,25 +456,99 @@
 
     const description = descriptions[product.name] || `Discover the ${product.name}, a masterpiece of craftsmanship and design. This exquisite piece combines premium materials with timeless style.`;
 
+    // Generate gallery images (4 variants from the base image URL)
+    const baseUrl = product.img;
+    const galleryImages = [
+      baseUrl.replace(/\?.*/, '') + '?w=600&q=80',
+      baseUrl.replace(/\?.*/, '') + '?w=600&q=80&crop=top',
+      baseUrl.replace(/\?.*/, '') + '?w=600&q=80&crop=bottom',
+      baseUrl.replace(/\?.*/, '') + '?w=600&q=80&crop=faces'
+    ];
+
+    let currentImageIndex = 0;
+
+    // Set main gallery image
+    const galleryMainImg = document.getElementById('galleryMainImg');
+    galleryMainImg.src = galleryImages[0];
+    galleryMainImg.alt = product.name;
+
+    // Render thumbnails
+    const galleryThumbs = document.getElementById('galleryThumbs');
+    galleryImages.forEach((imgUrl, index) => {
+      const thumb = document.createElement('img');
+      thumb.src = imgUrl;
+      thumb.alt = `${product.name} view ${index + 1}`;
+      thumb.loading = 'lazy';
+      if (index === 0) thumb.classList.add('thumb-active');
+
+      thumb.addEventListener('click', () => {
+        currentImageIndex = index;
+        galleryMainImg.src = imgUrl;
+        document.querySelectorAll('.gallery-thumbs img').forEach(t => t.classList.remove('thumb-active'));
+        thumb.classList.add('thumb-active');
+      });
+
+      galleryThumbs.appendChild(thumb);
+    });
+
+    // Lightbox functionality
+    const galleryLightbox = document.getElementById('galleryLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const galleryZoom = document.getElementById('galleryZoom');
+
+    function openLightbox() {
+      lightboxImg.src = galleryImages[currentImageIndex];
+      lightboxImg.alt = product.name;
+      galleryLightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      galleryLightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function showPrevImage() {
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      lightboxImg.src = galleryImages[currentImageIndex];
+      galleryMainImg.src = galleryImages[currentImageIndex];
+      document.querySelectorAll('.gallery-thumbs img').forEach((t, i) => {
+        t.classList.toggle('thumb-active', i === currentImageIndex);
+      });
+    }
+
+    function showNextImage() {
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      lightboxImg.src = galleryImages[currentImageIndex];
+      galleryMainImg.src = galleryImages[currentImageIndex];
+      document.querySelectorAll('.gallery-thumbs img').forEach((t, i) => {
+        t.classList.toggle('thumb-active', i === currentImageIndex);
+      });
+    }
+
+    // Event listeners for lightbox
+    galleryZoom.addEventListener('click', openLightbox);
+    galleryMainImg.addEventListener('click', openLightbox);
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxOverlay.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', showPrevImage);
+    lightboxNext.addEventListener('click', showNextImage);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (galleryLightbox.classList.contains('open')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showPrevImage();
+        if (e.key === 'ArrowRight') showNextImage();
+      }
+    });
+
     // Populate page
     document.getElementById('pageTitle').textContent = `${product.name} — LUXE`;
-    document.getElementById('productImage').src = product.img;
-    document.getElementById('productImage').alt = product.name;
-    
-    // Handle main product image load/error
-    document.getElementById('productImage').addEventListener('load', function() {
-      const skeleton = document.getElementById('main-skel');
-      if (skeleton) skeleton.style.display = 'none';
-      this.classList.add('loaded');
-    });
-    document.getElementById('productImage').addEventListener('error', function() {
-      const skeleton = document.getElementById('main-skel');
-      if (skeleton) {
-        skeleton.innerHTML = `<div class="img-skeleton-unavailable"><i class="bi bi-image" aria-hidden="true"></i><p>Image unavailable</p></div>`;
-        skeleton.classList.remove('img-skeleton');
-      }
-      this.style.display = 'none';
-    });
     document.getElementById('productCategory').textContent = product.cat;
     document.getElementById('productName').textContent = product.name;
     document.getElementById('productDescription').textContent = description;
@@ -590,11 +787,35 @@
       showToast(`${product.name} (Size ${selectedSize}) added to bag!`);
     });
 
+    // ========================================
+    // RECENTLY VIEWED TRACKING & DISPLAY
+    // ========================================
+    saveRecentlyViewed(product.id);
+    renderRecentlyViewed(product.id);
+
     // Dismiss page loader after product is fully rendered
     if (typeof window.dismissPageLoader === 'function') {
       window.dismissPageLoader();
     }
   });
 </script>
+<a href="https://wa.me/923001234567" class="whatsapp-float" id="whatsappFloat" target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp">
+  <i class="bi bi-whatsapp" aria-hidden="true"></i>
+  <span class="whatsapp-tooltip">Chat with us</span>
+</a>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+  <div class="cookie-content">
+    <div class="cookie-text">
+      <i class="bi bi-cookie cookie-icon" aria-hidden="true"></i>
+      <p>We use cookies to enhance your browsing experience, personalise content, and analyse site traffic. By continuing to use LUXE you agree to our <a href="privacy-policy.html">Privacy Policy</a>.</p>
+    </div>
+    <div class="cookie-actions">
+      <button class="cookie-decline" id="cookieDecline">Decline</button>
+      <button class="cookie-accept" id="cookieAccept">Accept All</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

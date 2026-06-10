@@ -1,0 +1,155 @@
+/* =========================================
+   LUXE — Print Stylesheet
+   print.css
+   ========================================= */
+
+/* Page setup */
+@page {
+  margin: 2cm;
+}
+
+/* Hide non-essential elements */
+.announcement-bar,
+nav.navbar,
+.search-overlay,
+.cart-overlay,
+.cart-sidebar,
+.toast-msg,
+.back-to-top,
+.whatsapp-float,
+.cookie-banner,
+footer,
+#pageLoader {
+  display: none !important;
+}
+
+/* Hide all buttons */
+button,
+.btn-gold,
+.btn-outline-gold,
+.btn-submit,
+.btn-continue,
+.btn-checkout,
+.btn-min-width,
+a.btn-gold,
+a.btn-outline-gold {
+  display: none !important;
+}
+
+/* Body styling for print */
+body {
+  background: white !important;
+  color: black !important;
+  font-family: Georgia, 'Times New Roman', Times, serif !important;
+  font-size: 12pt !important;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+/* Confirmation section */
+.order-confirmation-section {
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: auto !important;
+  display: block !important;
+}
+
+/* Thank You heading */
+.order-confirmation-section h2,
+.heading-xlg {
+  font-size: 24pt !important;
+  margin-bottom: 12pt !important;
+  color: black !important;
+  font-weight: normal !important;
+}
+
+/* Success icon - make it print-friendly */
+.icon-xlg,
+.icon-gold {
+  color: black !important;
+  font-size: 48pt !important;
+}
+
+/* Order number box */
+.order-number-box {
+  font-size: 18pt !important;
+  color: black !important;
+  background: white !important;
+  border: 1pt solid #ccc !important;
+  padding: 8pt 16pt !important;
+  margin: 12pt 0 !important;
+  box-shadow: none !important;
+}
+
+.order-number-value {
+  color: black !important;
+  font-size: 18pt !important;
+}
+
+.order-number-label {
+  color: #666 !important;
+  font-size: 10pt !important;
+}
+
+/* Paragraphs */
+p,
+.text-muted {
+  color: #333 !important;
+  font-size: 11pt !important;
+  line-height: 1.6;
+}
+
+/* Prevent page breaks in important content */
+.order-confirmation-section,
+.order-number-box,
+h2 {
+  page-break-inside: avoid;
+}
+
+/* Print-only footer with contact information */
+body::after {
+  content: "LUXE Fashion Store — hello@luxe.pk — +92 300 1234567 — 123 Fashion St, Karachi";
+  display: block;
+  text-align: center;
+  margin-top: 24pt;
+  font-size: 9pt;
+  color: #666;
+  border-top: 1pt solid #ccc;
+  padding-top: 12pt;
+  page-break-inside: avoid;
+}
+
+/* Remove any background images or colors */
+* {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+body,
+.order-confirmation-section {
+  background-color: white !important;
+}
+
+/* Ensure links are visible and underlined */
+a {
+  color: black !important;
+  text-decoration: underline !important;
+}
+
+/* Container adjustments */
+.container-xl,
+.container {
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove any shadows, transitions, or animations */
+* {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+}
