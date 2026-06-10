@@ -1768,3 +1768,73 @@ footer { background: #0F0D0B; padding: 64px 0 32px; }
 .product-link-block {
   display: block;
 }
+
+/* ========================================
+   PAGE TRANSITION LOADER
+   ======================================== */
+
+@keyframes loaderFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  opacity: 1;
+  visibility: visible;
+}
+
+.page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-content {
+  text-align: center;
+}
+
+.loader-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  animation: loaderFadeIn 0.5s ease forwards;
+}
+
+.loader-bar-wrap {
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 24px auto 0;
+  position: relative;
+}
+
+.loader-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 0%;
+  background: var(--gold);
+  transition: width 0.8s ease;
+}
+
+.loader-bar.complete {
+  width: 100%;
+}

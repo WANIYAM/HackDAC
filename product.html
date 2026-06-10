@@ -20,6 +20,15 @@
 </head>
 <body>
 
+<div class="page-loader" id="pageLoader">
+  <div class="loader-content">
+    <div class="loader-brand">Luxe</div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loaderBar"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ANNOUNCEMENT BAR -->
 <div class="announcement-bar">
   <span>✦ Free Shipping on Orders Above Rs. 5,000 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; New Collection Arrived — Shop Now ✦</span>
@@ -494,6 +503,11 @@
         e.target.style.display = 'none';
       }
     }, true);
+
+    // Dismiss page loader after product is fully rendered
+    if (typeof window.dismissPageLoader === 'function') {
+      window.dismissPageLoader();
+    }
   });
 </script>
 </body>

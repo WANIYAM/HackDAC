@@ -614,6 +614,32 @@ function renderCheckout() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ========================================
+  // PAGE LOADER
+  // ========================================
+  const pageLoader = document.getElementById('pageLoader');
+  const loaderBar = document.getElementById('loaderBar');
+  
+  // Helper function to dismiss the loader
+  window.dismissPageLoader = function() {
+    if (pageLoader) {
+      pageLoader.classList.add('hidden');
+    }
+  };
+  
+  if (pageLoader && loaderBar) {
+    loaderBar.classList.add('complete');
+    
+    // For product.html, the loader will be dismissed by the product rendering code
+    // For all other pages, dismiss after 900ms
+    const isProductPage = window.location.pathname.toLowerCase().includes('product.html');
+    if (!isProductPage) {
+      setTimeout(() => {
+        dismissPageLoader();
+      }, 900);
+    }
+  }
+
   // Extract page category from URL
   const path = window.location.pathname.toLowerCase();
   let defaultCategory = 'all';
